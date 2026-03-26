@@ -1,0 +1,85 @@
+@model ModuloMVC.Models.Contato
+
+@{
+    ViewData["Title"] = "Excluir Contato";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    body { background-color: #f8f9fa; }
+
+    /* Gestalt: Região Comum e Fechamento para destacar a gravidade */
+    .delete-container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-top: 6px solid #dc3545; /* Vermelho no topo indica perigo/alerta */
+        overflow: hidden;
+    }
+
+    /* Ponto de Foco: Ícone de alerta para atenção imediata */
+    .warning-icon {
+        font-size: 3.5rem;
+        color: #dc3545;
+        margin-bottom: 1rem;
+    }
+
+    .contact-summary {
+        background-color: #fff5f5;
+        border-radius: 8px;
+        padding: 1.5rem;
+        border: 1px dashed #f5c2c7;
+    }
+
+    .label-preview {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #842029;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5 text-center">
+            
+            <div class="delete-container p-4 p-md-5">
+                <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
+                
+                <h2 class="fw-bold h4 mb-2">Confirmar Exclusão</h2>
+                <p class="text-muted mb-4">Você tem certeza que deseja remover este contato? Esta ação não pode ser desfeita.</p>
+
+                <div class="contact-summary text-start mb-4">
+                    <div class="mb-3">
+                        <span class="label-preview">Nome do Contato</span>
+                        <div class="h5 mb-0 fw-semibold">@Html.DisplayFor(c => c.Nome)</div>
+                    </div>
+                    <div>
+                        <span class="label-preview">Telefone</span>
+                        <div class="h6 mb-0 text-muted">@Html.DisplayFor(c => c.Telefone)</div>
+                    </div>
+                </div>
+
+                <form asp-action="Deletar">
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger btn-lg py-3 shadow-sm fw-bold">
+                            <i class="bi bi-trash3 me-2"></i>Sim, Excluir Contato
+                        </button>
+                        
+                        <a asp-action="Index" class="btn btn-link text-secondary text-decoration-none mt-2">
+                            Não, manter contato e voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <p class="mt-4 text-muted small">
+                Segurança do Sistema: O registro <span class="badge bg-light text-dark">#@Model.Id</span> será removido permanentemente.
+            </p>
+        </div>
+    </div>
+</div>
