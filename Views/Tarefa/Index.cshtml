@@ -1,0 +1,301 @@
+@model IEnumerable<ModuloMVC.Models.Tarefa>
+
+@{
+    ViewData["Title"] = "Minhas Tarefas";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    :root {
+        --card-bg: #ffffff;
+        --card-dark: #121212;
+        --accent-color: #0d6efd;
+        --text-placeholder: #adb5bd;
+    }
+
+
+
+    /* Container de Rolagem Lateral Limpo */
+    .tasks-horizontal-scroll {
+        overflow-x: auto;
+        padding: 20px 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .tasks-horizontal-scroll::-webkit-scrollbar { display: none; }
+
+    .tasks-track {
+        display: flex;
+        gap: 10px;
+        padding: 0 5%;
+        width: max-content;
+    }
+
+    /* Estrutura do Card (Lei da Região Comum) */
+    .task-card {
+        background: var(--card-bg);
+        width: 20vw;
+        min-height: 50vh;
+        border-radius: 28px;
+        padding: 4rem 2.5rem;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .task-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+    }
+
+    /* Card Featured (Estilo Escuro da Referência) */
+    .card-featured {
+        background: var(--card-dark) !important;
+        color: white !important;
+    }
+    .card-featured .task-description, 
+    .card-featured .text-placeholder { color: #666 !important; }
+    .card-featured .task-number { color: rgba(255,255,255,0.2); }
+    .card-featured .border-top { border-color: rgba(255,255,255,0.1) !important; }
+
+    .task-number {
+        position: absolute;
+        top: 35px;
+        right: 35px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #eee;
+    }
+
+    .task-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        min-height: 2.4em; /* Mantém consistência visual mesmo sem título longo */
+    }
+
+    .task-description {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: #555;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        margin-bottom: 20px;
+    }
+
+    /* Estilo para dados ausentes */
+    .text-placeholder {
+        color: var(--text-placeholder);
+        font-weight: 400;
+    }
+
+    /* Avatares */
+    .avatar-stack { display: flex; align-items: center; }
+    .avatar-mini {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #f0f0f0;
+        border: 2px solid #fff;
+        margin-left: -8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+    .avatar-mini:first-child { margin-left: 0; }
+    
+    /* Ações */
+    .task-actions {
+        position: absolute;
+        bottom: 35px;
+        right: 35px;
+        display: flex;
+        gap: 10px;
+    }
+    .btn-task-action {
+        color: inherit;
+        opacity: 0.4;
+        transition: opacity 0.2s;
+        font-size: 1.1rem;
+    }
+    .btn-task-action:hover { opacity: 1; }
+
+    /* Card Adicionar */
+    .add-task-card {
+        width: 20vw;
+        height: 30vh;
+        border-radius: 28px;
+        border: 2px dashed #525252;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #525252;
+        transition: all 0.3s;
+    }
+    .add-task-card:hover { border-color: var(--accent-color); color: var(--accent-color); background: #fff; }
+    .add-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .add-task-btn{
+
+        width: 12vw;
+        border-radius: 50px;
+        border: 2px dashed #525252;
+        align-items: center;
+        justify-content: center;
+        color: #525252;
+        transition: all 0.3s;
+        padding: 0.3rem;
+        position: relative;
+        top: -1rem;
+        left: 5rem;
+       text-decoration: none;
+    }
+    .add-task-btn:hover{
+        
+        border-color: var(--accent-color); color: var(--accent-color); background: #fff;
+    }
+</style>
+
+
+    <header class="text-center mb-5">
+        <h1 class="display-6 py-3 fw-bold">Serviço & Tarefas</h1>
+        <p class="text-muted small text-uppercase">Navegue horizontalmente pelas suas atividades</p>
+    </header>
+
+            <a asp-action="Criar" class="add-task-btn d-flex">
+                <div class="add-icon-wrapper">
+                    <i class="bi bi-plus-lg"></i>
+                </div>
+                <span class="fw-bold ms-3 me-4">Criar Tarefa</span>
+            </a>
+
+    <div class="tasks-horizontal-scroll">
+        <div class="tasks-track">
+            
+            @{ int index = 1; }
+            @foreach (var task in Model)
+            {
+                <div class="task-card @(index == 1 ? "card-featured" : "") shadow-sm">
+                    <div class="task-number">@index.ToString("D2")</div>
+                    
+                    <div class="task-content">
+                        @if (!string.IsNullOrWhiteSpace(task.Titulo))
+                        {
+                            <h2 class="task-title text-break">@task.Titulo</h2>
+                        }
+                        else
+                        {
+                            <h2 class="task-title text-placeholder fst-italic">Tarefa sem título</h2>
+                        }
+                        
+                        @if (!string.IsNullOrWhiteSpace(task.Descricao))
+                        {
+                            <p class="task-description">@task.Descricao</p>
+                        }
+                        else
+                        {
+                            <p class="task-description text-placeholder fst-italic">
+                                <i class="bi bi-info-circle me-1"></i>Nenhum detalhe adicional fornecido para esta tarefa.
+                            </p>
+                        }
+
+                        <div class="task-metadata mt-auto pt-3">
+                            <div class="meta-item">
+                                <i class="bi bi-calendar3 me-2"></i>
+                                @if (task.Vencimento.HasValue)
+                                {
+                                    <span class="fw-medium">@task.Vencimento.Value.ToString("dd/MM/yyyy")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-placeholder opacity-50">Sem prazo definido</span>
+                                }
+                            </div>
+                            
+                            <div class="meta-item mt-2">
+                                <span class="badge-status">
+                                    <i class="bi bi-circle-fill me-2 tiny-dot"></i> @task.Status
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="task-team mt-3 border-top pt-3">
+                            @if (task.ContatosEnvolvidos != null && task.ContatosEnvolvidos.Any())
+                            {
+                                <div class="avatar-stack">
+                                    @foreach(var contato in task.ContatosEnvolvidos.Take(3)) {
+                                        <div class="avatar-mini" title="@contato.Nome">@contato.Nome.Substring(0,1).ToUpper()</div>
+                                    }
+                                    @if(task.ContatosEnvolvidos.Count() > 3) {
+                                        <div class="avatar-mini more">+@(task.ContatosEnvolvidos.Count() - 3)</div>
+                                    }
+                                    <span class="ms-2 small text-muted">@task.ContatosEnvolvidos.Count() envolvidos</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-placeholder small opacity-50">
+                                    <i class="bi bi-person-dash me-1"></i>Sem contatos atribuídos
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="task-actions">
+                        <a asp-action="Editar" asp-route-id="@task.Id" class="btn-task-action" title="Editar"><i class="bi bi-pencil"></i></a>
+                        <a asp-action="Detalhes" asp-route-id="@task.Id" class="btn-task-action" title="Detalhes"><i class="bi bi-eye"></i></a>
+                    </div>
+                </div>
+                index++;
+            }
+
+            <a asp-action="Criar" class="add-task-card">
+                <div class="add-icon-wrapper">
+                    <i class="bi bi-plus-lg"></i>
+                </div>
+                <span class="fw-bold mt-2">Criar Tarefa</span>
+            </a>
+        </div>
+    </div>
+
+
+<script>
+    const container = document.querySelector('.tasks-horizontal-scroll');
+
+    // Transforma scroll vertical em horizontal dentro do contexto
+    container.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0) {
+            e.preventDefault();
+            container.scrollLeft += e.deltaY;
+        }
+    });
+
+    // Heurística de Flexibilidade: Permite trocar o card em destaque com um clique
+    const allCards = document.querySelectorAll('.task-card');
+    allCards.forEach(card => {
+        card.addEventListener('click', () => {
+            allCards.forEach(c => c.classList.remove('card-featured'));
+            card.classList.add('card-featured');
+        });
+    });
+</script>

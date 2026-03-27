@@ -1,0 +1,288 @@
+@model ModuloMVC.ViewModels.TarefaViewModel
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Criar Nova Tarefa";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    /* site.css */
+
+    /* --- Variáveis de Cor --- */
+    :root {
+        --bg-page: #fcfcfc;
+        /* Fundo original de image_0.png */
+        --bg-browser-frame: #0b0b0b;
+        /* Preto profundo para o formulário e frame */
+        --text-muted: #8a8a8a;
+        --text-input: #ffffff;
+        --input-border: #313131;
+        --accent-blue: #007bff;
+        --accent-green: #28a745;
+        --accent-red: #dc3545;
+    }
+
+    /* --- Layout Geral (Heurística 8, Gestalt Figure-Ground) --- */
+    .page-wrapper {
+        background-color: var(--bg-page);
+        background-image: url('../path/to/blurred-desk-background.jpg');
+        /* Adicione sua imagem de fundo blurred aqui */
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Moldura do Navegador (Mockup visual Heurística 2/4) */
+    .browser-window {
+        background-color: var(--bg-browser-frame);
+        width: 90vw;
+        max-width: 1300px;
+        height: 85vh;
+        border-radius: 24px;
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        padding: 20px;
+    }
+
+    /* --- Estilização do Formulário (Heurística 8) --- */
+    .task-form-card {
+        background-color: #121212;
+        /* Ligeiramente mais claro que o fundo do frame */
+        padding: 60px;
+        border-radius: 24px;
+        border: 1px solid var(--input-border);
+    }
+
+    .contacts-header {
+        letter-spacing: 0.5px;
+    }
+
+    .subtitle-text {
+        text-transform: lowercase;
+    }
+
+    /* --- Inputs Customizados (Heurística 6, Gestalt Similarity) --- */
+    .dark-input {
+        background-color: #121212 !important;
+        color: var(--text-input) !important;
+        border-color: var(--input-border) !important;
+        border-radius: 12px !important;
+        padding: 12px 18px;
+        box-shadow: none !important;
+    }
+
+    .dark-input:focus {
+        border-color: #ffffff !important;
+        color: #ffffff !important;
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted);
+    }
+
+    /* Ajuste específico para o seletor de data (Heurística 5) */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+
+    /* Exemplo de erro na imagem (Simulação Estática) */
+    .[is-validation-error] {
+        display: block;
+        top: -2px;
+        /* Pequeno ajuste de alinhamento */
+        font-size: 0.7rem;
+    }
+
+    /* --- Painel de Contatos (Gestalt Continuação/Flow, Heurística 7) --- */
+    .contacts-panel {
+        border: 1px solid var(--input-border);
+    }
+
+    .contact-row {
+        transition: background-color 0.2s;
+        border-bottom: 1px solid var(--input-border);
+    }
+
+    .contact-row:last-child {
+        border-bottom: none;
+    }
+
+    .contact-row:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* --- Avatares (Heurística 6, Gestalt Proximity) --- */
+    .avatar-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Cores de avatar de exemplo */
+    .avatar-blue {
+        background-color: var(--accent-blue);
+    }
+
+    .avatar-green {
+        background-color: var(--accent-green);
+    }
+
+    .avatar-red {
+        background-color: var(--accent-red);
+    }
+
+    /* --- Checkboxes Customizados (Heurística 7/8, Gestalt Similarity) --- */
+    .form-check-input.styled-checkbox {
+        width: 26px;
+        height: 26px;
+        border-radius: 13px !important;
+        border: 2px solid var(--input-border);
+        margin: 0;
+        transition: all 0.2s;
+    }
+
+    .form-check-input.styled-checkbox:checked {
+        background-color: var(--accent-blue);
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    }
+
+    .form-check-input.styled-checkbox:focus {
+        box-shadow: none;
+        border-color: #ffffff;
+    }
+
+    /* --- Botões de Ação (Heurística 1, Gestalt Proximity) --- */
+    .btn-submit-task {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-submit-task:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
+    }
+
+    .secondary-actions .btn-action:hover {
+        color: #ffffff !important;
+    }
+</style>
+
+<div class="container-fluid page-wrapper px-0">
+    <div class="browser-window">
+        <header class="text-center py-4 mb-3 border-bottom border-dark">
+            <h1 class="display-5 fw-bold text-light">Criar Nova Tarefa</h1>
+            <p class="text-muted fs-6">Preencha os campos abaixo</p>
+        </header>
+
+        <div class="container d-flex justify-content-center">
+            <div class="col-lg-8">
+                <form id="createTaskForm" class="task-form-card shadow-lg" method="post" asp-action="Criar">
+
+                    <div asp-validation-summary="All"
+                         class="text-danger fw-bold bg-dark p-3 rounded mb-4 border border-danger"></div>
+
+                    <section class="task-data-section mb-4">
+
+                        <section class="task-data-section mb-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="Titulo" class="form-label text-light">Título da Tarefa</label>
+                                <input asp-for="Titulo" class="form-control form-input dark-input"
+                                       placeholder="Ex: Fazer compras" />
+                                <span class="text-danger" asp-validation-for="Titulo"></span>
+
+                                <label asp-for="Descricao" class="form-label text-light">Descrição</label>
+                                <textarea asp-for="Descricao" class="form-control form-input dark-input"
+                                          placeholder="Detalhes da tarefa..." rows="3"></textarea>
+                                <span class="text-danger" asp-validation-for="Descricao"></span>
+
+                                <label asp-for="Vencimento" class="form-label text-light">Data de Vencimento</label>
+                                <div class="input-group">
+                                    <span class="input-group-text dark-input border-end-0 text-light"><i
+                                        class="bi bi-calendar3"></i></span>
+                                        <input asp-for="Vencimento" type="date"
+                                               class="form-control form-input dark-input border-start-0" />
+                                    </div>
+                                    <span class="text-danger" asp-validation-for="Vencimento"></span>
+                                </div>
+                            </section>
+
+                            <hr class="border-dark opacity-25 my-4" />
+
+                            <section id="contactsListSection" class="contacts-panel rounded-4 p-3 bg-dark-subtle mb-4">
+                                <h2 class="h5 fw-bold text-light mb-1 contacts-header">Contatos Envolvidos</h2>
+                                <p class="text-muted fs-7 mb-3 subtitle-text">chamar para tarefa</p>
+
+                                <div class="contacts-rows-container">
+                                    @if (Model != null && Model.ContatosEnvolvidos != null &&
+                                    Model.ContatosEnvolvidos.Any())
+                                    {
+                                        @foreach (var contact in Model.ContatosEnvolvidos)
+                                        {
+                                            // Verifica se o ID deste contato já foi marcado (útil caso a tela recarregue com erro)
+                                            bool isChecked = Model.ContatosSelecionadosIds != null &&
+                                    Model.ContatosSelecionadosIds.Contains(contact.Id);
+
+                                            <div
+                                                class="contact-row d-flex align-items-center justify-content-between py-2 border-bottom border-dark border-opacity-10">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="avatar-circle">
+                                                        @(string.IsNullOrEmpty(contact.Nome) ? "" : contact.Nome.Substring(0,
+                                                1).ToUpper())
+                                                    </div>
+                                                    <span class="contact-name text-light fw-medium">@contact.Nome</span>
+                                                </div>
+
+                                                <div class="form-check m-0 p-0">
+                                                    <input type="checkbox" name="ContatosSelecionadosIds" value="@contact.Id"
+                                                           id="@contact.Id" class="form-check-input contact-checkbox styled-checkbox"
+                                                    @(isChecked ? "checked" : "") />
+                                                    <label class="form-check-label invisible" for="@contact.Id"></label>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center text-muted py-3">Nenhum contato disponível para selecionar.
+                                        </div>
+                                    }
+                                </div>
+
+                                <small class="text-muted mt-2 d-block text-center fs-8">Selecione quem participará</small>
+                            </section>
+                            <button type="submit" id="btnSubmitTask"
+                                    class="btn btn-primary btn-submit-task btn-lg px-5 text-light w-100 py-3 rounded-pill fw-bold">
+                                <i class="bi bi-check2-circle me-2 fs-5"></i> Criar Tarefa
+                            </button>
+
+                        
+                            <div class="secondary-actions d-flex gap-4">
+                                <button type="reset"
+                                        class="btn btn-link text-muted text-decoration-none btn-action fs-7">Limpar</button>
+                                <a asp-action="Index"
+                                   class="btn btn-link text-muted text-decoration-none btn-action fs-7">Cancelar</a>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <footer class="text-center py-4 mt-5 border-top border-dark text-muted fs-8">
+                    Sistema de Tarefas | © @DateTime.Now.Year
+                </footer>
+            </div>
+        </div>
+
