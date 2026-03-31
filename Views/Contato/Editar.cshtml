@@ -35,13 +35,12 @@
     .custom-textarea {
         border-radius: 8px;
         resize: none;
-        /* Evita que o usuário quebre o layout */
         height: 150px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
 
-    /* Gestalt: Proximidade e Agrupamento dos botões de ação */
+
     .action-group {
         background-color: #f8f9fa;
         padding: 1.5rem 2rem;
@@ -51,14 +50,11 @@
         justify-content: flex-end;
     }
 
-    /* Email */
-    /* Detalhe Único: Feedback Visual Dinâmico de Validação */
+
     .email-input:valid:not(:placeholder-shown) {
         border-color: #198754 !important;
-        /* Verde Sucesso do Bootstrap */
     }
 
-    /* Faz o ícone de 'Check' aparecer suavemente quando o e-mail está correto */
     .email-input:valid:not(:placeholder-shown)~.validation-indicator .bi-check-circle-fill {
         opacity: 1;
         color: #198754;
@@ -69,7 +65,7 @@
         opacity: 0;
         transform: scale(0.5);
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        /* Efeito "mola" (bounce) */
+
     }
 </style>
 
@@ -182,7 +178,7 @@
         </div>
 
         <script>
-            // Heurística de Visibilidade do Status: Contador de caracteres em tempo real
+
             const textarea = document.querySelector('textarea[Name="Descricao"]');
             const charCount = document.getElementById('charCount');
 

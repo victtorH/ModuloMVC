@@ -1,13 +1,12 @@
 @model ModuloMVC.ViewModels.TarefaEdicaoViewModel
 
 <style>
-    /* Container e Tipografia Base */
     .task-edit-container {
         color: #1a1a1a;
-        /* Preto Base */
+     
     }
 
-    /* --- LADO ESQUERDO: Dados --- */
+
     .current-data-section h2 {
         font-weight: 600;
         font-size: 3.2rem;
@@ -22,7 +21,6 @@
         display: block;
         font-size: 0.85rem;
         color: #6c757d;
-        /* Cinza médio */
         margin-bottom: 0.2rem;
         font-weight: 500;
     }
@@ -34,7 +32,6 @@
         color: #1a1a1a;
     }
 
-    /* --- LADO DIREITO: Formulário --- */
     .custom-label {
         font-size: 0.95rem;
         font-weight: 600;
@@ -42,10 +39,8 @@
         margin-bottom: 0.5rem;
     }
 
-    /* Inputs minimalistas (Cinza) com Foco (Azul) */
     .custom-input {
         background-color: #f4f4f5;
-        /* Cinza claro idêntico à imagem */
         border: 1px solid transparent;
         border-radius: 10px;
         padding: 0.8rem 1.2rem;
@@ -57,13 +52,11 @@
     .custom-input:focus {
         background-color: #ffffff;
         border-color: #0d6efd;
-        /* Azul de Foco */
         box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
-        /* Halo azul suave */
         outline: none;
     }
 
-    /* --- LISTA DE CONTATOS --- */
+
     .contact-list-container {
         display: flex;
         flex-direction: column;
@@ -71,10 +64,8 @@
         max-height: 280px;
         overflow-y: auto;
         padding-right: 8px;
-        /* Espaço para o scrollbar */
     }
 
-    /* Customização de Scrollbar para ficar elegante */
     .contact-list-container::-webkit-scrollbar {
         width: 6px;
     }
@@ -92,7 +83,7 @@
 
     .contact-checkbox {
         display: none;
-        /* Esconde o checkbox feio nativo */
+
     }
 
     .contact-card-content {
@@ -100,7 +91,7 @@
         align-items: center;
         padding: 12px 16px;
         background-color: #f4f4f5;
-        /* Cinza claro */
+
         border-radius: 10px;
         border: 2px solid transparent;
         transition: all 0.2s ease-in-out;
@@ -110,7 +101,7 @@
         width: 42px;
         height: 42px;
         background-color: #e2e8f0;
-        /* Cinza um pouco mais escuro */
+
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -137,26 +128,19 @@
         color: #6c757d;
     }
 
-    /* --- ESTADO SELECIONADO (Usando o AZUL) --- */
-    /* Heurística 1: Visibilidade do status do sistema */
     .contact-checkbox:checked+.contact-card-content {
         background-color: rgba(13, 110, 253, 0.05);
-        /* Fundo azul bem claro */
         border-color: #0d6efd;
-        /* Borda Azul */
     }
 
     .contact-checkbox:checked+.contact-card-content .contact-avatar {
         background-color: #0d6efd;
-        /* Círculo Azul */
         color: #ffffff;
-        /* Letra Branca */
     }
 
-    /* --- BOTÃO SUBMIT --- */
+
     .custom-submit-btn {
         background-color: #1a1a1a;
-        /* Preto */
         color: #ffffff;
         border-radius: 10px;
         font-weight: 600;
@@ -172,12 +156,10 @@
 
     .custom-submit-btn:active {
         transform: scale(0.98);
-        /* Feedback tátil visual */
     }
 
     .back-link {
         color: #797979;
-        /* Cinza médio, elegante e discreto */
         text-decoration: none;
         font-weight: 900;
         transition: color 0.2s ease;
@@ -192,28 +174,24 @@
 
     .back-link:hover {
         color: #1a1a1a;
-        /* Fica preto ao passar o mouse (Feedback visual) */
         text-decoration: none;
     }
 
-    /* --- SELEÇÃO DE STATUS (Radio Buttons Segmentados) --- */
     .status-options-container {
         width: 100%;
     }
 
     .status-radio {
         display: none;
-        /* Esconde o botão rádio nativo do navegador */
     }
 
     .status-card {
         cursor: pointer;
         margin: 0;
         user-select: none;
-        /* Evita que o texto seja selecionado ao clicar rápido */
     }
 
-    /* Estado Padrão (Inativo - Cinza) - Lei da Similaridade */
+
     .status-card-content {
         background-color: #f4f4f5;
         border: 2px solid transparent;
@@ -224,19 +202,16 @@
         transition: all 0.25s ease;
     }
 
-    /* Efeito ao passar o mouse */
     .status-card:hover .status-card-content {
         background-color: #e2e8f0;
         color: #1a1a1a;
     }
 
-    /* Estado Selecionado (Ativo - Preto) - Lei da Figura-Fundo */
     .status-radio:checked+.status-card-content {
         background-color: #1a1a1a;
         color: #ffffff;
         border-color: #1a1a1a;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        /* Sutil elevação */
     }
 </style>
 

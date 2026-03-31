@@ -6,15 +6,12 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <style>
-    /* Global/Background (Gestalt: Figure/Ground) */
     body {
         background-color: #ffffff;
-        /* Clean white background like the image */
         color: #1a1a24;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* Layout Structure */
     .page-layout {
         display: flex;
         flex-direction: row;
@@ -26,18 +23,17 @@
 
     }
 
-    /* Left Side: Typography & Call to Action (Gestalt: Proximity) */
     .header-section {
         flex: 0 0 40%;
         padding-right: 2rem;
-      
+
     }
 
     .badge-tag {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-    
+
         border: 1px solid #bbb;
         background-color: transparent;
         color: #0d6efd;
@@ -68,76 +64,65 @@
         width: 25vw;
     }
 
-    /* Enhanced Call to Action (Nielsen: Visibility of System Status/User Control) */
 
-/* ==========================================
-   BOTÃO EXPANSÍVEL (Novo Contato)
-   ========================================== */
 
-/* Estado Inicial: Apenas o Círculo (Mouse Out) */
-.btn-create-contact {
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    background-color: #1a1a24; /* Fundo preto elegante (Figura/Fundo forte) */
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 50px;
-    height: 48px;
+    .btn-create-contact {
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        background-color: #1a1a24;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 50px;
+        height: 48px;
+        max-width: 48px;
+        overflow: hidden;
+
     
-    /* O "Pulo do Gato": Começa travado no tamanho exato de um círculo */
-    max-width: 48px; 
-    overflow: hidden;
-    
-    /* Transição elástica e fluida para largura, cor e posição */
-    transition: max-width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                background-color 0.3s ease, 
-                transform 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 1rem; /* Descola do texto de cima */
-}
+        transition: max-width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+            background-color 0.3s ease,
+            transform 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+    }
 
-/* O container do Ícone (Garante que o círculo não esmague o ícone) */
-.btn-create-contact .add-icon-wrapper {
-    min-width: 48px; /* Largura mínima fixa igual à altura */
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: transform 0.4s ease; /* Para a giradinha do hover */
-}
 
-/* O Texto (Invisível no início) */
-.btn-create-contact .btn-text {
-    white-space: nowrap; /* Impede o texto de quebrar linha */
-    font-weight: 500;
-    opacity: 0; /* Invisível */
-    transform: translateX(-10px); /* Levemente puxado para a esquerda */
-    transition: all 0.3s ease;
-}
+    .btn-create-contact .add-icon-wrapper {
+        min-width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: transform 0.4s ease;
+    }
 
-/* --- ESTADO ATIVO: O EFEITO HOVER (Mouse In) --- */
-.btn-create-contact:hover {
-    max-width: 200px; /* Abre espaço suficiente para o texto caber */
-    transform: translateY(-2px); /* Levanta o botão (Sensação tátil) */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-    color: #ffffff;
-}
+    .btn-create-contact .btn-text {
+        white-space: nowrap;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+    }
 
-/* Faz o ícone '+' dar uma leve e charmosa girada de 90 graus */
-.btn-create-contact:hover .add-icon-wrapper {
-    transform: rotate(90deg);
-}
 
-/* Revela o texto e empurra ele pro lugar certo */
-.btn-create-contact:hover .btn-text {
-    opacity: 1;
-    transform: translateX(0);
-    padding-right: 1.5rem; /* Cria o espaço no final da pílula */
-}
+    .btn-create-contact:hover {
+        max-width: 200px;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        color: #ffffff;
+    }
 
-    /* Right Side: Contact List (Gestalt: Similarity & Continuity) */
+    .btn-create-contact:hover .add-icon-wrapper {
+        transform: rotate(90deg);
+    }
+
+    .btn-create-contact:hover .btn-text {
+        opacity: 1;
+        transform: translateX(0);
+        padding-right: 1.5rem;
+    }
+
 
 
     .tasks-horizontal-scroll {
@@ -165,11 +150,10 @@
         }
     }
 
-    /* Contact Card imitating the FAQ styling in the image */
+
     .contact-card {
         position: relative;
         background-color: #ffffff;
-        /* Very light gray/blue */
         border: 1px solid #0000001a;
         border-radius: 16px;
         padding: 1.5rem;
@@ -177,7 +161,6 @@
         align-items: center;
         justify-content: space-between;
         transition: all 0.2s ease;
-        /* Gestalt: Figure/Ground - Subtle shadow makes it pop */
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 
         .contact-name {
@@ -196,24 +179,24 @@
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         border-color: #e2e8f0;
 
-    .btn-edit{
-        background-color: #dcfce7;
-        color: #166534;
+        .btn-edit {
+            background-color: #dcfce7;
+            color: #166534;
         }
 
-            .btn-details {
-        background-color: #bfdbfe;
-        color: #1d4ed8;
-    }
+        .btn-details {
+            background-color: #bfdbfe;
+            color: #1d4ed8;
+        }
 
 
-    .btn-delete {
-        background-color: #fecaca;
-        color: #b91c1c;
+        .btn-delete {
+            background-color: #fecaca;
+            color: #b91c1c;
+        }
+
+    
     }
-    
-    
-}
 
     
 
@@ -227,7 +210,6 @@
         width: 48px;
         height: 48px;
         background-color: #f0f0f0;
-        /* Light purple */
         color: #0d6efd;
         border-radius: 50%;
         display: flex;
@@ -256,7 +238,6 @@
         column-wrap: nowrap;
     }
 
-    /* Status Badges */
     .status-badge {
         font-size: 0.75rem;
         padding: 0.25rem 0.6rem;
@@ -274,7 +255,6 @@
         color: #475569;
     }
 
-    /* Action Buttons (Nielsen: User Control and Freedom) */
     .actions-wrapper {
         display: flex;
         gap: 0.5rem;
@@ -292,7 +272,7 @@
         background-color: transparent;
     }
 
-    /* Purple icon buttons reflecting the image's style */
+
     .btn-edit {
         color: #bdbdbd;
         background-color: #f0f0f0;
@@ -313,7 +293,7 @@
     }
 
 
-    /* Empty State */
+
     .empty-state {
         text-align: center;
         padding: 4rem 2rem;
@@ -323,90 +303,85 @@
     }
 
     
-/* O Botão Minimalista */
-.btn-filter {
-   
-    margin-right: 1rem;
-    background-color: transparent;
-    border: 1px solid #e2e8f0; /* Cinza bem claro */
-    color: #525252;
-    border-radius: 2rem; /* Arredondado para combinar com o botão "Novo" */
-    padding: 0.5rem 1.2rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
 
-.btn-filter:hover, .btn-filter[aria-expanded="true"] {
-    background-color: #f8fafc;
-    border-color: #cbd5e1;
-    color: #1a1a24;
-}
+    .btn-filter {
 
-/* Remove a setinha padrão feia do dropdown do Bootstrap */
-.btn-filter::after {
-    display: none;
-}
+        margin-right: 1rem;
+        background-color: transparent;
+        border: 1px solid #e2e8f0;
+        color: #525252;
+        border-radius: 2rem;
+        padding: 0.5rem 1.2rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
 
-/* O Menu Suspenso (Dropdown) */
-.filter-menu {
-    border-radius: 16px; /* Mesma curvatura dos cards */
-    min-width: 220px;
-    margin-top: 0.5rem !important;
-    animation: fadeInDropdown 0.2s ease;
-}
+    .btn-filter:hover,
+    .btn-filter[aria-expanded="true"] {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+        color: #1a1a24;
+    }
 
-/* Estilização dos Checkboxes dentro do filtro */
-.custom-filter-check {
-    cursor: pointer;
-    margin: 0;
-    padding-left: 1.8rem;
-}
+    .btn-filter::after {
+        display: none;
+    }
 
-.custom-filter-check .form-check-input {
-    cursor: pointer;
-    border-color: #cbd5e1;
-}
 
-.custom-filter-check .form-check-input:checked {
-    background-color: #1a1a24; /* Preto/Grafite */
-    border-color: #1a1a24;
-}
+    .filter-menu {
+        border-radius: 16px;
+        min-width: 220px;
+        margin-top: 0.5rem !important;
+        animation: fadeInDropdown 0.2s ease;
+    }
 
-.custom-filter-check:hover .form-check-label {
-    color: #1a1a24 !important;
-}
+    .custom-filter-check {
+        cursor: pointer;
+        margin: 0;
+        padding-left: 1.8rem;
+    }
 
-/* Animação suave ao abrir 
-keyframes fadeInDropdown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}*/
+    .custom-filter-check .form-check-input {
+        cursor: pointer;
+        border-color: #cbd5e1;
+    }
 
-  /* Estilo para os inputs dentro do filtro */
-.custom-input-filter {
-    background-color: #f4f4f5 !important;
-    border: 1px solid transparent !important;
-    border-radius: 8px;
-    color: #1a1a24;
-}
+    .custom-filter-check .form-check-input:checked {
+        background-color: #1a1a24;
+        border-color: #1a1a24;
+    }
 
-.custom-input-filter:focus {
-    background-color: #ffffff !important;
-    border-color: #0d6efd !important;
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1) !important;
-}
+    .custom-filter-check:hover .form-check-label {
+        color: #1a1a24 !important;
+    }
 
-/* Ajuste das seções de filtro (Gestalt: Proximidade) */
-.filter-section .form-label {
-    margin-bottom: 0.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.7rem !important;
-}
 
-/* Tamanho de fonte auxiliar */
-.fs-7 { font-size: 0.85rem !important; }
 
+    .custom-input-filter {
+        background-color: #f4f4f5 !important;
+        border: 1px solid transparent !important;
+        border-radius: 8px;
+        color: #1a1a24;
+    }
+
+    .custom-input-filter:focus {
+        background-color: #ffffff !important;
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1) !important;
+    }
+
+
+    .filter-section .form-label {
+        margin-bottom: 0.3rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.7rem !important;
+    }
+
+
+    .fs-7 {
+        font-size: 0.85rem !important;
+    }
 </style>
 
 <div class="container d-flex">
@@ -420,7 +395,7 @@ keyframes fadeInDropdown {
             </div>
 
             <h1 class="main-title">
-                Sua lista D& 
+                Sua lista D&
                 <span class="highlight">contatos</span>
             </h1>
 
@@ -428,66 +403,78 @@ keyframes fadeInDropdown {
                 Gerencie seus contatos de forma simples. Visualize detalhes, atualize informações e mantenha sua rede
                 organizada e acessível.
             </p>
+
  
+            <div class="conteiner flex-row ">
 
-<div class="conteiner flex-row ">
+                <div class="dropdown d-inline-block filter-wrapper">
+                    <button class="btn btn-filter dropdown-toggle position-relative" type="button" id="dropdownFiltro"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                        <i class="bi bi-funnel me-1"></i> Filtrar
+                        <span
+                        class="position-absolute top-0 start-100 translate-middle p-1 bg-primary border border-light rounded-circle filter-badge d-none"
+                        id="badgeFiltroAtivo"></span>
+                    </button>
 
-<div class="dropdown d-inline-block filter-wrapper">
-    <button class="btn btn-filter dropdown-toggle position-relative" type="button" id="dropdownFiltro" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-        <i class="bi bi-funnel me-1"></i> Filtrar
-        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-primary border border-light rounded-circle filter-badge d-none" id="badgeFiltroAtivo"></span>
-    </button>
+                    <div class="dropdown-menu filter-menu shadow-lg border-0 p-4" aria-labelledby="dropdownFiltro"
+                         style="width: 300px;">
+                        <h6 class="dropdown-header px-0 text-dark fw-bold mb-3 fs-6">Refinar Busca</h6>
 
-    <div class="dropdown-menu filter-menu shadow-lg border-0 p-4" aria-labelledby="dropdownFiltro" style="width: 300px;">
-        <h6 class="dropdown-header px-0 text-dark fw-bold mb-3 fs-6">Refinar Busca</h6>
+                        <div class="filter-section mb-3">
+                            <label for="filtroNome" class="form-label fs-7 fw-medium text-muted">Nome</label>
+                            <input type="text" id="filtroNome" class="form-control form-control-sm custom-input-filter"
+                                   placeholder="Buscar por nome...">
+                        </div>
 
-        <div class="filter-section mb-3">
-            <label for="filtroNome" class="form-label fs-7 fw-medium text-muted">Nome</label>
-            <input type="text" id="filtroNome" class="form-control form-control-sm custom-input-filter" placeholder="Buscar por nome...">
-        </div>
+                        <div class="filter-section mb-3">
+                            <label for="filtroNumero" class="form-label fs-7 fw-medium text-muted">Telefone /
+                                Numero</label>
+                                <input type="tel" id="filtroNumero"
+                                       class="form-control form-control-sm custom-input-filter">
+                            </div>
 
-                <div class="filter-section mb-3">
-            <label for="filtroNumero" class="form-label fs-7 fw-medium text-muted">Telefone / Numero</label>
-            <input type="tel" id="filtroNumero" class="form-control form-control-sm custom-input-filter">
-        </div>
+                            <div class="filter-section mb-3">
+                                <label for="filtroEmail" class="form-label fs-7 fw-medium text-muted">E-mail</label>
+                                <input type="email" id="filtroEmail"
+                                       class="form-control form-control-sm custom-input-filter">
+                            </div>
 
-        <div class="filter-section mb-3">
-            <label for="filtroEmail" class="form-label fs-7 fw-medium text-muted">E-mail</label>
-            <input type="email" id="filtroEmail" class="form-control form-control-sm custom-input-filter">
-        </div>
-
-        <div class="filter-section mb-4">
-    <label class="form-label fs-7 fw-medium text-muted">Status</label>
-    <div class="d-flex flex-wrap gap-2">
-        <div class="form-check custom-filter-check">
-            <input class="form-check-input status-checkbox" type="checkbox" value="true" id="statusAtivo">
-            <label class="form-check-label text-muted fs-7" for="statusAtivo">Ativo</label>
-        </div>
-        <div class="form-check custom-filter-check">
-            <input class="form-check-input status-checkbox" type="checkbox" value="false" id="statusInativo">
-            <label class="form-check-label text-muted fs-7" for="statusInativo">Inativo</label>
-        </div>
-    </div>
-</div>
+                            <div class="filter-section mb-4">
+                                <label class="form-label fs-7 fw-medium text-muted">Status</label>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <div class="form-check custom-filter-check">
+                                        <input class="form-check-input status-checkbox" type="checkbox" value="true"
+                                               id="statusAtivo">
+                                        <label class="form-check-label text-muted fs-7" for="statusAtivo">Ativo</label>
+                                    </div>
+                                    <div class="form-check custom-filter-check">
+                                        <input class="form-check-input status-checkbox" type="checkbox" value="false"
+                                               id="statusInativo">
+                                        <label class="form-check-label text-muted fs-7" for="statusInativo">Inativo</label>
+                                    </div>
+                                </div>
+                            </div>
 
           
 
-        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 fs-7" id="btnLimparFiltro">Limpar tudo</button>
-            <button type="button" class="btn btn-dark btn-sm px-4 rounded-pill" id="btnAplicarFiltro">Aplicar</button>
-        </div>
-    </div>
-</div>
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                <button type="button" class="btn btn-link text-muted text-decoration-none p-0 fs-7"
+                                        id="btnLimparFiltro">Limpar tudo</button>
+                                <button type="button" class="btn btn-dark btn-sm px-4 rounded-pill"
+                                        id="btnAplicarFiltro">Aplicar</button>
+                            </div>
+                        </div>
+                    </div>
 
-                      <a asp-action="Criar" class="btn-create-contact">
-               <div class="add-icon-wrapper">
-                    <i class="bi bi-plus-lg"></i>
-                </div> <span class="btn-text">Novo Contato</span> 
-            </a>
+                    <a asp-action="Criar" class="btn-create-contact">
+                        <div class="add-icon-wrapper">
+                            <i class="bi bi-plus-lg"></i>
+                        </div> <span class="btn-text">Novo Contato</span>
+                    </a>
 
-</div>
+                </div>
 
-    </div>
+            </div>
         </div>
 
         <div class="list-section tasks-horizontal-scroll">
@@ -505,7 +492,16 @@ keyframes fadeInDropdown {
 
                                 <div class="contact-details">
                                     <div class="d-flex align-items-center gap-2">
-                                        <span class="contact-name">@Html.DisplayFor(c => item.Nome)</span>
+                                        @if ( item.Nome.Length <= 15)
+                                        {
+                                            <span class="contact-name">@item.Nome</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="contact-name" title="@item.Nome">
+                                                @item.Nome.Substring(0, 15)...
+                                            </span>
+                                        }
 
                                         @if (item.Status)
                                         {
@@ -532,8 +528,7 @@ keyframes fadeInDropdown {
                                        title="Detalhes">
                                     <i class="bi bi-file-earmark-text-fill"></i>
                                 </a>
-                                <a asp-action="Deletar" asp-route-id="@item.Id" class="action-icon-btn btn-delete"
-                                       title="Excluir">
+                                <a asp-action="Deletar" asp-route-id="@item.Id" class="action-icon-btn btn-delete" title="Excluir">
                                     <i class="bi bi-trash-fill"></i>
                                 </a>
                             </div>
@@ -554,102 +549,102 @@ keyframes fadeInDropdown {
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    // 1. Capturando os elementos do DOM (Baseado no seu novo HTML)
-    const btnLimpar = document.getElementById('btnLimparFiltro');
-    const btnAplicar = document.getElementById('btnAplicarFiltro');
-    const badge = document.getElementById('badgeFiltroAtivo');
-    
-    // Inputs de texto
-    const inputNome = document.getElementById('filtroNome');
-    const inputNumero = document.getElementById('filtroNumero');
-    const inputEmail = document.getElementById('filtroEmail');
-    
-    // Pegando os dois checkboxes de status pelo ID
-    // Substitua a linha de captura dos status por esta:
-const checkboxesStatus = document.querySelectorAll('.status-checkbox');
+    document.addEventListener("DOMContentLoaded", function () {
+        // 1. Capturando os elementos do DOM (Baseado no seu novo HTML)
+        const btnLimpar = document.getElementById('btnLimparFiltro');
+        const btnAplicar = document.getElementById('btnAplicarFiltro');
+        const badge = document.getElementById('badgeFiltroAtivo');
 
-    // ==========================================
-    // 2. APLICAR FILTRO (Monta a URL e Redireciona)
-    // ==========================================
-    if (btnAplicar) {
-        btnAplicar.addEventListener('click', function () {
-            // Pegando os valores digitados (o .trim() remove espaços em branco acidentais)
-            const nome = inputNome.value.trim();
-            const numero = inputNumero.value.trim();
-            const email = inputEmail.value.trim();
-            
-            // Usamos URLSearchParams para montar a QueryString (?nome=X&numero=Y)
-            const params = new URLSearchParams();
-            
-            if (nome) params.append('nome', nome);
-            if (numero) params.append('numero', numero);
-            if (email) params.append('email', email);
-            
-            // Verifica os status (Ativo/Inativo) marcados
+        // Inputs de texto
+        const inputNome = document.getElementById('filtroNome');
+        const inputNumero = document.getElementById('filtroNumero');
+        const inputEmail = document.getElementById('filtroEmail');
+
+        // Pegando os dois checkboxes de status pelo ID
+        // Substitua a linha de captura dos status por esta:
+        const checkboxesStatus = document.querySelectorAll('.status-checkbox');
+
+        // ==========================================
+        // 2. APLICAR FILTRO (Monta a URL e Redireciona)
+        // ==========================================
+        if (btnAplicar) {
+            btnAplicar.addEventListener('click', function () {
+                // Pegando os valores digitados (o .trim() remove espaços em branco acidentais)
+                const nome = inputNome.value.trim();
+                const numero = inputNumero.value.trim();
+                const email = inputEmail.value.trim();
+
+                // Usamos URLSearchParams para montar a QueryString (?nome=X&numero=Y)
+                const params = new URLSearchParams();
+
+                if (nome) params.append('nome', nome);
+                if (numero) params.append('numero', numero);
+                if (email) params.append('email', email);
+
+                // Verifica os status (Ativo/Inativo) marcados
+                checkboxesStatus.forEach(chk => {
+                    if (chk.checked) {
+                        params.append('status', chk.value);
+                    }
+                });
+
+                // Redireciona para a mesma página passando os filtros na URL
+                const urlBase = window.location.pathname;
+                window.location.href = urlBase + '?' + params.toString();
+            });
+        }
+
+        // ==========================================
+        // 3. LIMPAR FILTRO (Remove os parâmetros e recarrega)
+        // ==========================================
+        if (btnLimpar) {
+            btnLimpar.addEventListener('click', function () {
+                // Apenas redireciona para a rota limpa, sem a interrogação (?)
+                window.location.href = window.location.pathname;
+            });
+        }
+
+        // ==========================================
+        // 4. MANTER ESTADO VISUAL (Quando a página carrega)
+        // ==========================================
+        // Lê a URL atual para preencher os campos automaticamente
+        const urlParams = new URLSearchParams(window.location.search);
+        let temFiltroAtivo = false;
+
+        // Preenche Nome
+        if (urlParams.has('nome')) {
+            inputNome.value = urlParams.get('nome');
+            temFiltroAtivo = true;
+        }
+
+        // Preenche Número/Telefone
+        if (urlParams.has('numero')) {
+            inputNumero.value = urlParams.get('numero');
+            temFiltroAtivo = true;
+        }
+
+        // Preenche E-mail
+        if (urlParams.has('email')) {
+            inputEmail.value = urlParams.get('email');
+            temFiltroAtivo = true;
+        }
+
+        // Marca os Checkboxes de Status
+        if (urlParams.has('status')) {
+            // getAll pega todos os valores de status se houver mais de um na URL (ex: ?status=Ativo&status=Inativo)
+            const statusNaUrl = urlParams.getAll('status');
+
             checkboxesStatus.forEach(chk => {
-                if (chk.checked) {
-                    params.append('status', chk.value); 
+                if (statusNaUrl.includes(chk.value)) {
+                    chk.checked = true;
                 }
             });
+            temFiltroAtivo = true;
+        }
 
-            // Redireciona para a mesma página passando os filtros na URL
-            const urlBase = window.location.pathname;
-            window.location.href = urlBase + '?' + params.toString();
-        });
-    }
-
-    // ==========================================
-    // 3. LIMPAR FILTRO (Remove os parâmetros e recarrega)
-    // ==========================================
-    if (btnLimpar) {
-        btnLimpar.addEventListener('click', function () {
-            // Apenas redireciona para a rota limpa, sem a interrogação (?)
-            window.location.href = window.location.pathname; 
-        });
-    }
-
-    // ==========================================
-    // 4. MANTER ESTADO VISUAL (Quando a página carrega)
-    // ==========================================
-    // Lê a URL atual para preencher os campos automaticamente
-    const urlParams = new URLSearchParams(window.location.search);
-    let temFiltroAtivo = false;
-
-    // Preenche Nome
-    if (urlParams.has('nome')) {
-        inputNome.value = urlParams.get('nome');
-        temFiltroAtivo = true;
-    }
-    
-    // Preenche Número/Telefone
-    if (urlParams.has('numero')) {
-        inputNumero.value = urlParams.get('numero');
-        temFiltroAtivo = true;
-    }
-
-    // Preenche E-mail
-    if (urlParams.has('email')) {
-        inputEmail.value = urlParams.get('email');
-        temFiltroAtivo = true;
-    }
-    
-    // Marca os Checkboxes de Status
-    if (urlParams.has('status')) {
-        // getAll pega todos os valores de status se houver mais de um na URL (ex: ?status=Ativo&status=Inativo)
-        const statusNaUrl = urlParams.getAll('status'); 
-        
-        checkboxesStatus.forEach(chk => {
-            if (statusNaUrl.includes(chk.value)) {
-                chk.checked = true;
-            }
-        });
-        temFiltroAtivo = true;
-    }
-
-    // Se identificamos que a URL tem filtros, acendemos a bolinha azul no botão do funil
-    if (temFiltroAtivo && badge) {
-        badge.classList.remove('d-none');
-    }
-});
+        // Se identificamos que a URL tem filtros, acendemos a bolinha azul no botão do funil
+        if (temFiltroAtivo && badge) {
+            badge.classList.remove('d-none');
+        }
+    });
 </script>
