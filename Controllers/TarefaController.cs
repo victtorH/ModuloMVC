@@ -36,13 +36,9 @@ public async Task<IActionResult> Index(string? titulo, DateTime? data, List<Stat
 
 
         [HttpGet("Criar")]
-        // 1. O método precisa ser async porque vamos no banco buscar os contatos
         public async Task<IActionResult> Criar()
         {
-            // 2. Busca os contatos originais (Entidades ricas) lá do banco de dados
-            var contatosDoBanco = await _service.ListarContatos(); // Ou _context.Contatos.ToListAsync();
-
-            // 3. A Tradução: Transforma a lista de 'Contato' em 'ContatoViewModel'
+            var contatosDoBanco = await _service.ListarContatos(); 
             var contatosParaTela = contatosDoBanco.Select(c => new ContatoViewModel
             {
                 Id = c.Id,
@@ -52,12 +48,14 @@ public async Task<IActionResult> Index(string? titulo, DateTime? data, List<Stat
                 Status = c.Status
             }).ToList();
 
-            // 4. Cria a "mala" que vai viajar para a View, já com os contatos dentro
             var viewModel = new TarefaViewModel
             {
                 ContatosEnvolvidos = contatosParaTela
             };
 
+        string Caminho = Request.Headers["Reference"].ToString();
+
+        ViewBag.Retorno = string.IsNullOrEmpty(Caminho) ? Url.Action("Index") : Caminho; 
 
             return View(viewModel);
         }
@@ -66,6 +64,7 @@ public async Task<IActionResult> Index(string? titulo, DateTime? data, List<Stat
         [HttpPost("Criar")]
         public async Task<IActionResult> Criar(TarefaViewModel tarefa)
         {
+
             try
             {
                 if (!ModelState.IsValid)
@@ -94,30 +93,26 @@ public async Task<IActionResult> Index(string? titulo, DateTime? data, List<Stat
         [HttpGet("Editar/{id}")]
         public async Task<IActionResult> Editar(int id)
         {
-            // Busca a tarefa e os contatos possíveis
             var tarefa = await _service.BuscarComContatosPorIdAsync(id);
             var contatosDoBanco = await _service.ListarContatos();
 
-            // Monta a mala com os dois lados da tela
+
             var viewModel = new TarefaEdicaoViewModel
             {
                 Id = tarefa.Id,
 
-                // Dados para preencher os Inputs (O que pode mudar)
                 Titulo = tarefa.Titulo,
                 Descricao = tarefa.Descricao,
                 Vencimento = tarefa.Vencimento,
                 Status = tarefa.Status,
                 ContatosSelecionadosIds = tarefa.ContatosEnvolvidos.Select(c => c.Id).ToList(),
 
-                // Dados para o painel esquerdo (A foto de como estava)
                 TituloAtual = tarefa.Titulo,
                 DescricaoAtual = tarefa.Descricao,
                 VencimentoAtual = tarefa.Vencimento,
                 StatusAtual = tarefa.Status,
                 ContatosEnvolvidosAtuais = tarefa.ContatosEnvolvidos.Select(c => new ContatoViewModel { Nome = c.Nome }).ToList(),
 
-                // Contatos para desenhar os checkboxes
                 TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.Id, Nome = c.Nome, Email = c.Email }).ToList()
             };
 
@@ -131,7 +126,6 @@ public async Task<IActionResult> Index(string? titulo, DateTime? data, List<Stat
             {
                 if (!ModelState.IsValid)
                 {
-                    // Se der erro, recarregamos as listas para a tela não quebrar
                     var contatosDoBanco = await _service.ListarContatos();
                     model.TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.Id, Nome = c.Nome, Email = c.Email }).ToList();
                     return View(model);
