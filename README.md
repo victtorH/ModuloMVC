@@ -3,6 +3,8 @@ Bem-vindo ao repositório do meu sistema de produtividade e gestão de contatos!
 
 Meu objetivo aqui é ir além do CRUD básico, documentando minha evolução técnica, testando diferentes versões e, futuramente, implementando testes rigorosos de segurança.
 
+<img width="1853" height="903" alt="Image" src="https://github.com/user-attachments/assets/4ee1cbb4-f583-481d-8fd3-cfe9391e7916" />
+
 ## Tecnologias e Arquitetura em Estudo
 Este projeto está sendo construído para consolidar meus conhecimentos no ecossistema Microsoft e em padrões de projeto.
 
