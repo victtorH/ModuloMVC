@@ -25,7 +25,7 @@ Este projeto está sendo construído para consolidar meus conhecimentos no ecoss
 Se quiser clonar este projeto para ver o código em ação, o processo é direto:
 
 1. Certifique-se de ter o SDK do .NET 8 instalado e acesso a uma instância do SQL Server (o LocalDB do Visual Studio funciona perfeitamente).
-2. Faça o clone do repositório: git clone https://github.com/victtorH/ModuloMVC.git
+2. Faça o clone do repositório: git clone https://github.com/victtorH/TEnancy.git
 3. Abra a solução no Visual Studio 2022 ou VS Code.
 4. No arquivo appsettings.json, configure a DefaultConnection para apontar para o seu banco de dados.
 5. Certifique-se de que possui o EF Core Tools instalado e adicione os pacotes NuGet na versão 8.0.x: `Microsoft.EntityFrameworkCore.Design` e `Microsoft.EntityFrameworkCore.SqlServer`.
@@ -55,7 +55,7 @@ Por ser um projeto de estudo em constante evolução, defini um roadmap claro pa
 ## Desafios Enfrentados e Aprendizados
 Construir isso do zero trouxe desafios práticos excelentes para a minha evolução:
 
-**Estado de Navegação:** Lidar com a perda de filtros em Query Strings ao voltar de uma edição. Resolvi criando uma lógica híbrida com ViewBag (C#) e history.back() (JS).
+**Estado de Navegação:** Estado de Navegação: Preservar a navegação e os filtros (Query Strings) ao ir e voltar das telas de edição. Tentativas iniciais com history.back() causavam loops infinitos em caso de erros de validação, e o tráfego de rotas via ViewBag gerava um acoplamento indesejado no C#. A solução definitiva foi utilizar o sessionStorage via JavaScript, delegando o estado da interface para o cliente (navegador). Isso garantiu a retenção exata dos filtros, manteve o backend limpo e stateless, e já preparou a arquitetura para uma futura transição para API.
 
 **Armadilhas de Data e Hora:** O uso inicial de DateTime.Now impedia agendamentos para o dia atual devido aos milissegundos. Aprendi a lidar com isso adotando DateTime.Today e aplicando o princípio de Fail-Fast nas validações.
 
