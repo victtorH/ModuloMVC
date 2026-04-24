@@ -1,4 +1,4 @@
-@model ModuloMVC.ViewModels.TarefaEdicaoViewModel
+@model ModuloMVC.Application.ViewModels.TarefaEdicaoViewModel
 
 <link rel="stylesheet" href="~/css/Tarefa.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/TarefaResp.css" asp-append-version="true" />
@@ -21,8 +21,13 @@
             </div>
 
             <div class="data-group">
-                <span class="data-label">Vencimento:</span>
-                <p class="data-value">@(Model.VencimentoAtual?.ToString("dd/MM/yyyy") ?? "Sem data de vencimento")</p>
+                <span class="data-label">Data Início:</span>
+                <p class="data-value">@(Model.DataInicioAtual?.ToString("dd/MM/yyyy") ?? "Sem data de início")</p>
+            </div>
+
+            <div class="data-group">
+                <span class="data-label">Data Fim:</span>
+                <p class="data-value">@(Model.DataFimAtual?.ToString("dd/MM/yyyy") ?? "Sem data de fim")</p>
             </div>
 
             <div class="data-group">
@@ -86,8 +91,12 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-4">
-                        <label asp-for="Vencimento" class="editar-form-label custom-label">Vencimento</label>
-                        <input type="date" asp-for="Vencimento" class="form-control custom-input" required>
+                        <label asp-for="DataInicio" class="editar-form-label custom-label">Data Início</label>
+                        <input type="date" asp-for="DataInicio" class="form-control custom-input">
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="DataFim" class="editar-form-label custom-label">Data Fim</label>
+                        <input type="date" asp-for="DataFim" class="form-control custom-input">
                     </div>
                 </div>
 

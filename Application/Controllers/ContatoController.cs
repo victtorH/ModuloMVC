@@ -5,20 +5,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ModuloMVC.Services;
+using ModuloMVC.Application.Services;
+using ModuloMVC.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using ModuloMVC.ViewModels;
+using ModuloMVC.Application.ViewModels;
 
 
-namespace ModuloMVC.Controllers
+namespace ModuloMVC.Application.Controllers
 {   [Authorize]
     public class ContatoController : Controller
     {
 
-        private readonly ContatoService _service;
-        public ContatoController(ContatoService service)
+        private readonly IContatoService _service;
+        public ContatoController(IContatoService service)
         {
             _service = service;
         }

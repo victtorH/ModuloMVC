@@ -1,4 +1,4 @@
-@model ModuloMVC.ViewModels.TarefaViewModel
+@model ModuloMVC.Application.ViewModels.TarefaViewModel
 @using System.Linq
 
 @{
@@ -34,15 +34,23 @@
                                           placeholder="Detalhes da tarefa..." rows="3"></textarea>
                                 <span class="text-danger" asp-validation-for="Descricao"></span>
 
-                                <label asp-for="Vencimento" class="criar-form-label text-light">Data de
-                                    Vencimento</label>
+                                <label asp-for="DataInicio" class="criar-form-label text-light">Data de Início</label>
                                     <div class="input-group">
                                         <span class="criar-input-group-text dark-input border-end-0 text-light"><i
                                             class="bi bi-calendar3"></i></span>
-                                            <input asp-for="Vencimento" type="date"
+                                            <input asp-for="DataInicio" type="date"
                                                    class="form-control form-input dark-input border-start-0" />
                                         </div>
-                                        <span class="text-danger" asp-validation-for="Vencimento"></span>
+                                        <span class="text-danger" asp-validation-for="DataInicio"></span>
+
+                                <label asp-for="DataFim" class="criar-form-label text-light">Data de Fim</label>
+                                    <div class="input-group">
+                                        <span class="criar-input-group-text dark-input border-end-0 text-light"><i
+                                            class="bi bi-calendar3"></i></span>
+                                            <input asp-for="DataFim" type="date"
+                                                   class="form-control form-input dark-input border-start-0" />
+                                        </div>
+                                        <span class="text-danger" asp-validation-for="DataFim"></span>
                                     </div>
                                 </section>
 

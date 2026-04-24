@@ -186,10 +186,11 @@ namespace ModuloMVC.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Titulo = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Descricao = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    Vencimento = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataInicio = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataFim = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -200,8 +201,7 @@ namespace ModuloMVC.Migrations
                         name: "FK_Tarefa_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

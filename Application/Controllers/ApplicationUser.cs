@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace ModuloMVC.Controllers
+namespace ModuloMVC.Application.Controllers
 {
 
     public class ApplicationUser : Controller

@@ -1,4 +1,4 @@
-namespace ModuloMVC.Models;
+namespace ModuloMVC.Domain.Entities;
 
 public class ErrorViewModel
 {

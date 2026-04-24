@@ -1,0 +1,189 @@
+@{
+    ViewData["Title"] = "Workspace";
+    Layout = "_Layout"; // Assumindo o layout padrão do MVC
+
+    // Simulação de dados vindos do Controller (ViewModel)
+    var nomeUtilizador = "Victtor";
+    var dataAtual = DateTime.Now.ToString("dd/MM/yyyy");
+
+    // Simulação de uma lista de tarefas
+    var tarefas = new List<dynamic>
+    {
+        new { Titulo = "Revisar protótipo de UX", Data = "19/01/2024", Concluida = true },
+        new { Titulo = "Reunião com stakeholders", Data = "19/01/2024", Concluida = false },
+        new { Titulo = "Ajustar paleta de cores", Data = "26/06/2024", Concluida = true },
+        new { Titulo = "Criar empty states no Vanilla JS", Data = "17/01/2024", Concluida = false },
+        new { Titulo = "Remover Tailwind", Data = "16/01/2024", Concluida = false }
+    };
+}
+
+    <link rel="stylesheet" href="~/css/Workspace.css" asp-append-version="true" />
+
+<!-- HEADER -->
+
+
+        <div class="blob"></div>
+        
+        <div class="page-header">
+            <!-- Utilização de sintaxe Razor para renderização dinâmica -->
+            <h1 class="page-title">Olá, @nomeUtilizador</h1>
+            <p class="page-subtitle">Data de hoje, @dataAtual</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- CARD TAREFAS -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Tarefas Pendentes</h2>
+                    <a href="#" class="link-accent">Ver Todas</a>
+                </div>
+                <div class="task-list">
+                    <!-- Renderização dinâmica com Razor baseada na ViewModel -->
+                    @{
+                        int delayContador = 1;
+                        foreach (var tarefa in tarefas)
+                        {
+                            var delayAnimacao = (delayContador * 0.05).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + "s";
+                            var classeConcluida = tarefa.Concluida ? "done" : "";
+
+                            <div class="task-item @classeConcluida" style="animation-delay: @delayAnimacao">
+                                <div class="task-left">
+                                    <div class="task-checkbox">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </div>
+                                    <span class="task-title">@tarefa.Titulo</span>
+                                </div>
+                                <span class="task-date">@tarefa.Data</span>
+                            </div>
+                            
+                            delayContador++;
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- CARD ANOTAÇÕES -->
+            <div class="card" style="padding-bottom: 0;">
+                <div class="card-header">
+                    <h2 class="card-title">Anotações Recentes</h2>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <button id="toggle-empty-btn" style="color: var(--text-placeholder); text-decoration: underline; font-size: 0.75rem;">Testar Empty State</button>
+                        <a href="#" class="link-accent" id="ver-todas-link">Ver Todas</a>
+                    </div>
+                </div>
+
+                <div class="notes-grid" id="notes-content">
+                    <div class="note-card" style="animation-delay: 0.1s">
+                        <div class="note-header">
+                            <h3 class="note-title">Requisitos do Sistema</h3>
+                            <button class="note-action"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button>
+                        </div>
+                        <p class="note-content">Os utilizadores precisam de ver os estados das tarefas dinamicamente.</p>
+                        <div class="note-date">Editado: 19/03</div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state-content">
+                    <div class="rocket-container">
+                        <div class="rocket-bg"></div>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="rocket-svg">
+                            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                        </svg>
+                    </div>
+                    <h3 class="empty-title">Ainda não tem nada por aqui.</h3>
+                    <p class="empty-text">Que tal criar a sua primeira anotação ou adicionar um novo contacto?</p>
+                    <div class="empty-actions">
+                        <button class="btn-main">Nova Anotação</button>
+                        <button class="btn-secondary">Novo Contacto</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+ <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // NOTA: A lógica que definia a data atual via JavaScript foi removida daqui
+            // porque agora a data é renderizada diretamente pelo servidor usando a sintaxe Razor (@@dataAtual).
+
+        
+
+            // Lógica das Tarefas (Visibilidade do Status)
+            const tasks = document.querySelectorAll('.task-item');
+            tasks.forEach(task => {
+                task.addEventListener('click', () => {
+                    task.classList.toggle('done');
+                });
+            });
+
+
+
+            // Lógica do Empty State
+            const btnToggleEmpty = document.getElementById('toggle-empty-btn');
+            const notesContent = document.getElementById('notes-content');
+            const emptyStateContent = document.getElementById('empty-state-content');
+            const linkVerTodas = document.getElementById('ver-todas-link');
+            let isEmpty = false;
+
+            btnToggleEmpty.addEventListener('click', () => {
+                isEmpty = !isEmpty;
+                if (isEmpty) {
+                    notesContent.style.display = 'none';
+                    emptyStateContent.classList.add('active');
+                    btnToggleEmpty.textContent = 'Mostrar Dados';
+                    linkVerTodas.style.display = 'none';
+                } else {
+                    notesContent.style.display = 'grid';
+                    emptyStateContent.classList.remove('active');
+                    btnToggleEmpty.textContent = 'Testar Empty State';
+                    linkVerTodas.style.display = 'block';
+                }
+            });
+
+            // Parallax suave no Blob decorativo
+            const blob = document.querySelector('.blob');
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 40;
+                const y = (e.clientY / window.innerHeight - 0.5) * 40;
+                blob.style.transform = `translate(${x}px, ${y}px)`;
+            });
+
+            // Efeito Ripple (Ondas globais nos elementos do Main/Header/Footer)
+            const addRipple = (e, element) => {
+                const circle = document.createElement('span');
+                const diameter = Math.max(element.clientWidth, element.clientHeight);
+                const radius = diameter / 2;
+                const rect = element.getBoundingClientRect();
+                
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${e.clientX - rect.left - radius}px`;
+                circle.style.top = `${e.clientY - rect.top - radius}px`;
+                circle.classList.add('ripple-effect');
+                
+                Array.from(element.children).forEach(child => {
+                    if (child.style) child.style.position = 'relative';
+                    if (child.style) child.style.zIndex = '1';
+                });
+
+                const existingRipple = element.querySelector('.ripple-effect');
+                if (existingRipple) existingRipple.remove();
+                
+                element.appendChild(circle);
+                setTimeout(() => circle.remove(), 600);
+            };
+
+            document.querySelectorAll('.nav-link, .btn-main, .btn-secondary, .task-item, .note-card').forEach(btn => {
+                btn.style.position = 'relative';
+                btn.style.overflow = 'hidden';
+                btn.addEventListener('mousedown', (e) => addRipple(e, btn));
+            });
+        });
+    </script>
+}

@@ -1,18 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using ModuloMVC.Context;
-using ModuloMVC.Services;
+using ModuloMVC.Infrastructure.Context;
+using ModuloMVC.Application.Services;
+using ModuloMVC.Domain.Interfaces;
+using ModuloMVC.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<AgendaContext>(options =>
+builder.Services.AddDbContext<TEnancyDB>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConectandoDb")));
 
-builder.Services.AddScoped<ContatoService>();
-builder.Services.AddScoped<TarefaService>();
+builder.Services.AddScoped<IContatoRepository, ContatoRepository>();
+builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
+builder.Services.AddScoped<IContatoService, ContatoService>();
+builder.Services.AddScoped<ITarefaService, TarefaService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
@@ -25,7 +29,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
 }
-).AddEntityFrameworkStores<AgendaContext>();
+).AddEntityFrameworkStores<TEnancyDB>();
 
 var app = builder.Build();
 

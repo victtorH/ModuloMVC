@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace ModuloMVC.Models
+namespace ModuloMVC.Domain.Entities
 {
     public class Contato
     {
@@ -18,7 +18,7 @@ namespace ModuloMVC.Models
         public bool Status { get; private set; }
         public string? Descricao { get; private set; }
 
-        public ICollection<Tarefa> Tarefas { get; private set; }
+        public ICollection<Tarefa>? Tarefas { get; private set; }
 
         public Contato(string nome, string email, string telefone, string? descricao)
         {

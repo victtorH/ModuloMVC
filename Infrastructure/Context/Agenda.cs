@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using ModuloMVC.Models;
+using ModuloMVC.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace ModuloMVC.Context
+namespace ModuloMVC.Infrastructure.Context
 {
-    public class AgendaContext : IdentityDbContext<IdentityUser>
+    public class TEnancyDB : IdentityDbContext<IdentityUser>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AgendaContext(
-            DbContextOptions<AgendaContext> options,
+        public TEnancyDB(
+            DbContextOptions<TEnancyDB> options,
             IHttpContextAccessor httpContextAccessor) : base(options)
         {
             _httpContextAccessor = httpContextAccessor;

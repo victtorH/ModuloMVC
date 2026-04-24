@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ModuloMVC.Context;
+using ModuloMVC.Infrastructure.Context;
 
 #nullable disable
 
 namespace ModuloMVC.Migrations
 {
-    [DbContext(typeof(AgendaContext))]
-    partial class AgendaContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TEnancyDB))]
+    [Migration("20260424072821_MultitenancySemDDD")]
+    partial class MultitenancySemDDD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,7 +238,7 @@ namespace ModuloMVC.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ModuloMVC.Models.Contato", b =>
+            modelBuilder.Entity("ModuloMVC.Domain.Entities.Contato", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -272,13 +275,19 @@ namespace ModuloMVC.Migrations
                     b.ToTable("Contato");
                 });
 
-            modelBuilder.Entity("ModuloMVC.Models.Tarefa", b =>
+            modelBuilder.Entity("ModuloMVC.Domain.Entities.Tarefa", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DataFim")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataInicio")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
                         .HasMaxLength(2000)
@@ -293,11 +302,7 @@ namespace ModuloMVC.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("Vencimento")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -311,13 +316,13 @@ namespace ModuloMVC.Migrations
 
             modelBuilder.Entity("ContatoTarefa", b =>
                 {
-                    b.HasOne("ModuloMVC.Models.Contato", null)
+                    b.HasOne("ModuloMVC.Domain.Entities.Contato", null)
                         .WithMany()
                         .HasForeignKey("ContatosEnvolvidosId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ModuloMVC.Models.Tarefa", null)
+                    b.HasOne("ModuloMVC.Domain.Entities.Tarefa", null)
                         .WithMany()
                         .HasForeignKey("TarefasId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -375,7 +380,7 @@ namespace ModuloMVC.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ModuloMVC.Models.Contato", b =>
+            modelBuilder.Entity("ModuloMVC.Domain.Entities.Contato", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -386,13 +391,11 @@ namespace ModuloMVC.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ModuloMVC.Models.Tarefa", b =>
+            modelBuilder.Entity("ModuloMVC.Domain.Entities.Tarefa", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

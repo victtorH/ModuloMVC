@@ -1,7 +1,7 @@
-@model IEnumerable<ModuloMVC.Models.Tarefa>
+@model IEnumerable<ModuloMVC.Application.TDOs.TarefaTDO>
 
 @{
-    ViewData["Title"] = "Minhas Tarefas";
+    ViewData["Title"] = "Tarefas";
 }
 
 <link rel="stylesheet" href="~/css/Tarefa.css" asp-append-version="true" />
@@ -14,15 +14,15 @@
         <h1 class="display-6 py-3 fw-bold">Serviço & Tarefas</h1>
 <div class="d-flex justify-content-between align-items-end mb-4">
     <div class="quick-tabs d-flex gap-2 p-1 bg-light rounded-pill border">
-        <a asp-action="Index" asp-route-visao="atrasadas" 
+        <a asp-action="Index" asp-route-visao ="atrasadas" 
            class="quick-tab text-decoration-none  @(ViewBag.VisaoAtual == "atrasadas" ? "active" : "text-muted")">
            Atrasadas
         </a>
-        <a asp-action="Index" asp-route-visao="hoje" 
+        <a asp-action="Index" asp-route-visao ="hoje" 
            class="quick-tab text-decoration-none @(ViewBag.VisaoAtual == "hoje" ? "active" : "text-muted")">
            Hoje em diante
         </a>
-        <a asp-action="Index" asp-route-visao="todas" 
+        <a asp-action="Index" asp-route-visao ="todas" 
            class="quick-tab text-decoration-none  @(ViewBag.VisaoAtual == "todas" ? "active" : "text-muted")">
            Todas
         </a>
@@ -61,7 +61,7 @@
         </div>
 
         <div class="filter-section mb-3">
-            <label for="filtroData" class="home-form-label fs-7 fw-medium text-muted">Vencimento / Cadastro</label>
+            <label for="filtroData" class="home-form-label fs-7 fw-medium text-muted">Data Início / Cadastro</label>
             <input type="date" id="filtroData" class="form-control form-control-sm custom-input-filter">
         </div>
 
@@ -128,13 +128,24 @@
                         <div class="task-metadata mt-auto pt-3">
                             <div class="meta-item">
                                 <i class="bi bi-calendar3 me-2"></i>
-                                @if (task.Vencimento.HasValue)
+                                @if (task.DataInicio.HasValue)
                                 {
-                                    <span class="fw-medium">@task.Vencimento.Value.ToString("dd/MM/yyyy")</span>
+                                    <span class="fw-medium">@task.DataInicio.Value.ToString("dd/MM/yyyy")</span>
                                 }
                                 else
                                 {
-                                    <span class="text-placeholder opacity-50">Sem prazo definido</span>
+                                    <span class="text-placeholder opacity-50">Sem data início</span>
+                                }
+                            </div>
+                            <div class="meta-item">
+                                <i class="bi bi-calendar-check me-2"></i>
+                                @if (task.DataFim.HasValue)
+                                {
+                                    <span class="fw-medium">@task.DataFim.Value.ToString("dd/MM/yyyy")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-placeholder opacity-50">Sem data fim</span>
                                 }
                             </div>
                             
@@ -294,17 +305,6 @@ if (btnLimpar) {
     }
 
 }); 
-
-btnAplicar.addEventListener('click', function () {
-    const params = new URLSearchParams(window.location.search);
-    
-    params.set('titulo', inputTitulo.value.trim());
- 
-  
-
-    window.location.href = window.location.pathname + '?' + params.toString();
-});
-
 
 document.querySelectorAll('input[type="date"]').forEach(function(dateInput) {
     dateInput.addEventListener('click', function(e) {

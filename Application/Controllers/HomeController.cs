@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using ModuloMVC.Models;
+using ModuloMVC.Domain.Entities;
 
-namespace ModuloMVC.Controllers;
+namespace ModuloMVC.Application.Controllers;
 
 public class HomeController : Controller
 {
@@ -18,7 +18,7 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Privacy()
+    public IActionResult Workspace()
     {
         return View();
     }

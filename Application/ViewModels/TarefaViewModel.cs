@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ModuloMVC.Enum;
 
-namespace ModuloMVC.ViewModels
+namespace ModuloMVC.Application.ViewModels
 {
 
 
@@ -13,7 +13,8 @@ namespace ModuloMVC.ViewModels
     {
         public string? Titulo { get; set; }
         public string? Descricao { get; set; }
-        public DateTime? Vencimento { get; set; }
+        public DateTime? DataInicio { get; set; }
+        public DateTime? DataFim { get; set; }
 
         public string? RotaDeRetorno {get; set;}
  
