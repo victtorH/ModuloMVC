@@ -5,34 +5,46 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ModuloMVC.Services;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ModuloMVC.ViewModels;
+using ModuloMVC.Interfaces;
 
 
 namespace ModuloMVC.Controllers
-{   [Authorize]
+{
+    [Authorize]
     public class ContatoController : Controller
     {
 
-        private readonly ContatoService _service;
-        public ContatoController(ContatoService service)
+        private readonly IContatoService _service;
+        public ContatoController(IContatoService service)
         {
             _service = service;
         }
 
 
-[HttpGet]
+        [HttpGet]
 
-public async Task<IActionResult> Index(string? nome, string? numero, string? email, List<bool>? status)
-{
+        public async Task<IActionResult> Index(string? nome, string? numero, string? email)
+        {
 
-    var contatosFiltrados = await _service.ListarTodosAsync(nome, numero, email, status);
-    
-    return View(contatosFiltrados);
-}
+            var contatosFiltrados = await _service.GetAll(nome, numero, email);
+
+            var listacontatos = new List<ContatoViewModel>();
+            foreach (var contato in contatosFiltrados)
+            {
+                listacontatos.Add(new ContatoViewModel
+                {
+                    Id = contato.id,
+                    Nome = contato.nome,
+                    Email = contato.email,
+                    Telefone = contato.telefone
+                });
+            }
+            return View(listacontatos);
+        }
 
         [HttpGet]
         public IActionResult Criar()
@@ -43,98 +55,81 @@ public async Task<IActionResult> Index(string? nome, string? numero, string? ema
         [HttpPost]
         public async Task<IActionResult> Criar(ContatoViewModel contato)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    throw new ValidationException("Os valores inserirdos não correspondem ao pedido no sistema");
 
-                }
-                    
-                await  _service.CriarUm(contato.Nome,contato.Email,contato.Telefone,contato.Descricao);
-                return RedirectToAction("Index");
-            }
-            catch (Exception err)
-            {
-                ModelState.AddModelError(string.Empty, err.Message);
-                return View("Criar");
-            }
+            await _service.Create(contato.Nome, contato.Email, contato.Telefone.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", ""), contato.Descricao);
+            return RedirectToAction("Index");
+
 
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Deletar(int id)
-        {
-            try
-            {
-                var contato = await _service.BuscarPorId(id);
-                return View(contato);
-            }
-            catch (Exception err)
-            {
-                ModelState.AddModelError(string.Empty, err.Message);
-                return RedirectToAction("index");
-            }
-        }
 
         [HttpPost]
-        public async Task<IActionResult> DeletarConfirmado(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
-            try
-            {
-               await  _service.DeletarUm(id);
-                return RedirectToAction("index");
-            }
-            catch (Exception err)
-            {
-                ModelState.AddModelError(string.Empty, err.Message);
-                return RedirectToAction("index");
-            }
+
+            await _service.Delete(id);
+            return RedirectToAction("index");
+
         }
 
         [HttpGet]
         public async Task<IActionResult> Editar(int id)
         {
-           try
+
+            var contato = await _service.GetById(id);
+            var contatoViewModel = new ContatoViewModel
             {
-                var contato = await _service.BuscarPorId(id);
-                return View(contato);
-            }
-            catch (Exception err)
-            {
-                ModelState.AddModelError(string.Empty, err.Message);
-                return RedirectToAction("index");
-            }
+                Id = contato.id,
+                Nome = contato.nome,
+                Email = contato.email,
+                Telefone = contato.telefone,
+                Descricao = contato.descricao,
+                Status = contato.status
+            };
+            return View(contatoViewModel);
+
         }
 
         [HttpPost]
-        public async Task<IActionResult> SalvarEdicao(int id, ContatoViewModel contato)
+        public async Task<IActionResult> Editar(int id, ContatoViewModel contato)
         {
-            try
-            {
-              await  _service.EditarUm(id, contato.Nome, contato.Email, contato.Telefone, contato.Status, contato.Descricao );
-                return RedirectToAction("Index");
-            }
-            catch(Exception err)
-            {
-                ModelState.AddModelError(string.Empty, err.Message);
-                return RedirectToAction("index");
-            }
+
+            await _service.Update(id, contato.Nome, contato.Email, contato.Telefone, contato.Status, contato.Descricao);
+            return RedirectToAction("Detalhes", new { id = id });
+
 
         }
 
         [HttpGet]
         public async Task<IActionResult> Detalhes(int id)
         {
-           try
+            try
             {
-                var contato = await _service.BuscarPorId(id);
-                return View(contato);
+                var contato = await _service.GetById(id);
+                var contatoViewModel = new ContatoViewModel
+                {
+                    Id = contato.id,
+                    Nome = contato.nome,
+                    Email = contato.email,
+                    Telefone = contato.telefone,
+                    Descricao = contato.descricao,
+                    Status = contato.status,
+                    Tarefas = contato.Item7.Select(t => new TarefaViewModel
+                    {
+                        Id = t.id,
+                        Titulo = t.titulo,
+                        DataInicio = t.datainicio,
+                        DataFim = t.datafim,
+                        Status = t.status
+
+                    }).ToList()
+                };
+                return View(contatoViewModel);
             }
             catch (Exception err)
             {
                 ModelState.AddModelError(string.Empty, err.Message);
-                return RedirectToAction("index");
+                return RedirectToAction("Index");
             }
         }
     }

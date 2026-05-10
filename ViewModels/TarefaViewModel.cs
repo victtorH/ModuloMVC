@@ -11,16 +11,18 @@ namespace ModuloMVC.ViewModels
 
     public class TarefaViewModel
     {
+        public int Id { get; set; }
         public string? Titulo { get; set; }
         public string? Descricao { get; set; }
-        public DateTime? Vencimento { get; set; }
+        public DateTime? DataInicio { get; set; }
+        public DateTime? DataFim { get; set; }
+        public string? RotaDeRetorno { get; set; }
+        public StatusTarefa Status { get; set; }
 
-        public string? RotaDeRetorno {get; set;}
- 
 
-      [ValidateNever] 
-    public List<ContatoViewModel> ContatosEnvolvidos { get; set; } = new();
-       
+        [ValidateNever]
+        public List<ContatoViewModel> ContatosEnvolvidos { get; set; } = new();
+
         public List<int> ContatosSelecionadosIds { get; set; } = new();
 
     }

@@ -9,155 +9,80 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Diagnostics;
 using Humanizer;
-using ModuloMVC.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using ModuloMVC.Enum;
+using ModuloMVC.Interfaces;
 
 namespace ModuloMVC.Services
 {
-    public class TarefaService
+    public class TarefaService : ITarefaService
     {
-        protected readonly AgendaContext _context;
-        public TarefaService(AgendaContext context)
+        protected readonly ITarefasRepository _tarefasRepository;
+        protected readonly IContatoRepository _contatoRepository;
+        private visaotarefa visaotarefa;
+        public TarefaService(ITarefasRepository tarefasRepository, IContatoRepository contatoRepository)
         {
-            _context = context;
-        }
-
-        public async Task<List<Tarefa>> ListarTodosAsync(string? titulo, DateTime? data, List<StatusTarefa>? status, string? visao)
-        {
-            var query = _context.Tarefa
-            .OrderBy(t => t.Vencimento)
-            .Include(t => t.ContatosEnvolvidos)
-            .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(titulo))
-            {
-                query = query.Where(t => t.Titulo.Contains(titulo));
-            }
-
-            if (data.HasValue)
-            {
-
-                query = query.Where(t => t.Vencimento.HasValue && t.Vencimento.Value.Date == data.Value.Date);
-            }
-
-            if (status != null && status.Any())
-            {
-
-                query = query.Where(t => status.Contains(t.Status));
-            }
-
-            var hoje = DateTime.Today;
-
-            if (visao == "atrasadas")
-            {
-                query = query.Where(t => t.Vencimento.HasValue && t.Vencimento.Value.Date < hoje);
-            }
-            else if (visao == "hoje")
-            {
-
-                query = query.Where(t => !t.Vencimento.HasValue || t.Vencimento.Value.Date >= hoje);
-            }
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<List<Contato>> ListarContatos()
-        {
-            return await _context.Contato.ToListAsync();
+            _tarefasRepository = tarefasRepository;
+            _contatoRepository = contatoRepository;
         }
 
 
-
-        public async Task<Tarefa> BuscarPorId(int id)
+        public async Task Create(string? titulo, string? descricao, DateTime? dataInicio, DateTime? dataFim, List<int> IdsContatos)
         {
-            var tarefa = await _context.Tarefa.FindAsync(id);
-            if (tarefa == null)
+            var tarefa = new Tarefa(titulo, descricao, dataInicio, dataFim);
+            var contatos = await _contatoRepository.GetContatosByIds(IdsContatos);
+            tarefa.AtualizarContatos(contatos);
+            await _tarefasRepository.CreateTarefa(tarefa);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _tarefasRepository.DeleteTarefa(id);
+        }
+        
+
+        public async Task<List<(int id, string? titulo, string? descricao, DateTime? dataInicio, DateTime? dataFim, StatusTarefa status, List<(int id, string? nome, string? email)> contatos)>> GetAll(string? titulo, DateTime? dataInicio, DateTime? dataFim, StatusTarefa? status, string? visao)
+        {
+            switch (visao)
             {
-                throw new ArgumentException("Tarefa solicitado não existe");
+                case "atrasadas":
+                   visaotarefa = visaotarefa.atrasadas;
+                    break;
+                case "hoje":
+                    visaotarefa = visaotarefa.hoje;
+                    break;
+                case "todas":
+                    visaotarefa = visaotarefa.todas;
+                    break;
+
             }
-
-            return tarefa;
+            
+            var tarefas = await _tarefasRepository.GetAllTarefas(titulo, dataInicio, dataFim, status, visaotarefa);
+            return tarefas.Select(t => (t.Id, t.Titulo, t.Descricao, t.DataInicio, t.DataFim, t.Status, t.ContatosEnvolvidos
+            .Select(c => (c.Id, c.Nome, c.Email)).ToList())).ToList();
         }
 
-        public async Task<Tarefa> BuscarComContatosPorIdAsync(int id)
+        public async Task<List<(int id, string? nome, string? email)>> GetAllContatos()
         {
-            var tarefa = await _context.Tarefa
-                                       .Include(t => t.ContatosEnvolvidos)
-                                       .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (tarefa == null) throw new ArgumentException("Tarefa não encontrada.");
-
-            return tarefa;
+            var contatos = await _contatoRepository.GetAllContatos(null, null, null);
+            return contatos.Select(c => (c.Id, c.Nome, c.Email)).ToList();
         }
 
-
-        private async Task ValidarSeJaExite(string? titulo, string? descricao, DateTime? vencimento, int IgnorarId = 0)
+        public async Task<(int id, string? titulo, string? descricao, DateTime? dataInicio, DateTime? dataFim, StatusTarefa status, List<(int id, string? nome, string? email)>)> GetById(int id)
         {
-
-            var validar = await _context.Tarefa.Where(t => t.Titulo == titulo && t.Descricao == descricao && t.Vencimento == vencimento && t.Id != IgnorarId).AnyAsync();
-            if (validar)
-            {
-                throw new InvalidOperationException("Está tarefa já foi criada, por genilezar verificar listagem de tarefas");
-            }
+            var tarefa = await _tarefasRepository.GetByIdTarefa(id);
+            return (tarefa.Id, tarefa.Titulo, tarefa.Descricao, tarefa.DataInicio, tarefa.DataFim, tarefa.Status, tarefa.ContatosEnvolvidos
+            .Select(c => (c.Id, c.Nome, c.Email)).ToList());
         }
+        
 
-
-        public async Task<Tarefa> CriarUmaAsync(string? titulo, string? descricao, DateTime? vencimento, List<int> Ids)
+        public async Task Update(int id, string? titulo, string? descricao, DateTime? dataInicio, DateTime? dataFim, StatusTarefa status, List<int> IdsContatos)
         {
-            await ValidarSeJaExite(titulo, descricao, vencimento);
-
-            if (vencimento < DateTime.Today)
-            {
-                throw new Exception("A data não pode ser anterior a de hoje");
-            }
-
-            var contatos = await _context.Contato
-                                         .Where(c => Ids.Contains(c.Id))
-                                         .ToListAsync();
-
-            Tarefa novaTarefa = new Tarefa(titulo, descricao, vencimento);
-            foreach (var contato in contatos)
-            {
-                novaTarefa.AdicionarContato(contato);
-            }
-
-            await _context.Tarefa.AddAsync(novaTarefa);
-            await _context.SaveChangesAsync();
-
-            return novaTarefa;
+            var tarefa = await _tarefasRepository.GetByIdTarefa(id);
+            tarefa.AtualizarTarefa(titulo, descricao, dataInicio, dataFim, status);
+            var contatos = await _contatoRepository.GetContatosByIds(IdsContatos);
+            tarefa.AtualizarContatos(contatos);
+            await _tarefasRepository.UpdateTarefa(tarefa);
         }
-
-        public async Task AtualizarUmaAsync(int id, string? titulo, string? descricao, DateTime? vencimento, StatusTarefa status, List<int> idsContatos)
-        {
-
-            await ValidarSeJaExite(titulo, descricao, vencimento, id);
-            if (vencimento < DateTime.Today)
-            {
-                throw new Exception("A data não pode ser anterior a de hoje");
-            }
-
-            var tarefa = await BuscarComContatosPorIdAsync(id);
-
-
-            tarefa.AtualizarTarefa(titulo, descricao, vencimento, status);
-
-            var novosContatos = await _context.Contato
-                                              .Where(c => idsContatos.Contains(c.Id))
-                                              .ToListAsync();
-
-            tarefa.AtualizarContatos(novosContatos);
-
-            _context.Tarefa.Update(tarefa);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task ExcluirUm(int id)
-        {
-            var tarefa = await BuscarPorId(id);
-            _context.Tarefa.Remove(tarefa);
-            await _context.SaveChangesAsync();
-        }
-
     }
 }

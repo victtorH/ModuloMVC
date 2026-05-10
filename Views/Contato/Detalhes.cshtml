@@ -1,86 +1,317 @@
-@model ModuloMVC.Models.Contato
+@model ModuloMVC.ViewModels.ContatoViewModel
 
 @{
     ViewData["Title"] = "Detalhes";
 }
 
-<link rel="stylesheet" href="~/css/Contato.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/ContatoDetalhes.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/ContatoResp.css" asp-append-version="true" />
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
-            
-            <a asp-action="Index" class="text-decoration-none text-muted small mb-3 d-inline-block">
-                <i class="bi bi-arrow-left me-1"></i>Voltar para a lista
-            </a>
+<section class="container-card-contact">
+    <a asp-action="Index" class="back-link d-inline-block mb-3 text-decoration-none text-muted">
+        <i class="bi bi-arrow-left-circle"></i>
+    </a>
 
-            <div class="details-card">
-                <div class="details-header d-flex flex-column align-items-center">
-                    <div class="avatar-profile mb-3 fw-bold">
-                        @(string.IsNullOrEmpty(Model.Nome) ? "?" : Model.Nome.Substring(0, 1).ToUpper())
+    <div class="glass-container">
+        <div class="profile-card-flipper" id="cardFlipper">
+        
+            <div class="glass-container">
+
+                <div class="profile-card-front profile-card-unique">
+
+
+                    <div class="header-section">
+
+                        <div class="initial-avatar">
+
+                            <span>@(string.IsNullOrEmpty(Model.Nome) ? "?" : Model.Nome.Substring(0,
+                                                                                                                                                                                                                                                                1).ToUpper())</span>
+
+                                <div class="status-dot active" title="Conta Ativa"></div>
+
+                            </div>
+
+                            <div class="main-info">
+
+                                <h2>@Model.Nome</h2>
+
+                            </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="body-section">
+                            @if(!string.IsNullOrEmpty(Model.Descricao))
+                            {
+                                <div class="description-box">
+
+                                <label>Descrição</label>
+
+                                    <p>@Model.Descricao</p>
+                                </div>
+                            }
+                            else if(string.IsNullOrEmpty(Model.Descricao))
+                            {
+                                <div class="description-box empty">
+                                    <p> <i class="bi bi-card-text"></i> O contato não possui uma descrição.</p>
+                                </div>
+                            }
+
+
+
+
+                            <div class="contact-grid">
+
+                                <div class="contact-pill">
+
+                                    <i class="bi bi-envelope-check-fill"></i>
+
+                                    <a href="mailto:@Model.Email">@Model.Email</a>
+
+                                </div>
+
+                                <div class="contact-pill">
+                                    <i class="bi bi-telephone-fill"></i>
+                                    <a href="https://wa.me/@Convert.ToUInt64(Model.Telefone).ToString(@"00000000000")"
+                                           target="_blank">
+                                        @Convert.ToUInt64(Model.Telefone).ToString(@"(00) 00000-0000")
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer-actions">
+
+                            <button type="button" class="btn-action edit" onclick="toggleFlip()">
+                                <i class="fas fa-pen-nib"></i> Editar
+                            </button>
+
+                            <button type="button" class="btn-action delete" data-bs-toggle="modal"
+                                    data-bs-target="#modalExcluirTarefa">
+                                Excluir Tarefa
+                            </button>
+
+                
+
+      
+                        </div>
+
                     </div>
-                    <h2 class="h3 fw-bold mb-1">@Html.DisplayFor(model => model.Nome)</h2>
-                    
-                    <div class="mt-2">
-                        @if (Model.Status)
-                        {
-                            <span class="badge rounded-pill bg-success-subtle text-success border border-success px-3 py-2">
-                                <i class="bi bi-circle-fill me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>
-                                Contato Ativo
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge rounded-pill bg-secondary-subtle text-secondary border px-3 py-2">
-                                <i class="bi bi-circle-fill me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>
-                                Contato Inativo
-                            </span>
-                        }
+
+                </div>
+
+
+                <div class="profile-card-back profile-card-unique">
+                    <form asp-action="Editar" asp-route-id="@Model.Id" method="post" class="edit-form-container">
+                        <div class="header-section">
+                            <div class="initial-avatar">
+                                <span><i class="bi bi-pencil-fill"></i></span>
+                            </div>
+                            <div class="main-info">
+                                <input asp-for="Nome" class="glass-input-title" placeholder="Nome" />
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="body-section">
+                            <div class="description-box">
+                                <label>Editar Descrição</label>
+                                <textarea asp-for="Descricao" class="glass-input"></textarea>
+                                <div class="form-text d-flex justify-content-between">
+                                    <span>Opcional</span>
+                                    <span id="charCount">0 / 50</span>
+                                </div>
+                            </div>
+
+                            <div class="contact-grid">
+                                <div class="contact-pill">
+                                    <i class="bi bi-envelope"></i>
+                                    <input asp-for="Email" class="glass-input-inline" />
+                                </div>
+                                <div class="contact-pill">
+                                    <i class="bi bi-telephone"></i>
+                                    <input asp-for="Telefone" class="glass-input-inline" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="footer-actions">
+                            <button type="submit" class="btn-action edit">Salvar</button>
+                            <button type="button" class="btn-action cancel" onclick="toggleFlip()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="glass-block activities-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="notas">
+                    <i class="fas fa-sticky-note"></i> Anotações Relacionadas
+                </button>
+                <button class="tab-btn" data-tab="tarefas">
+                    <i class="fas fa-tasks"></i> Tarefas Envolvidas
+                </button>
+            </div>
+
+            <div class="tab-content">
+                <div id="notas" class="tab-pane active">
+                    <div class="empty-state">
+                        <i class="fas fa-comment-slash"></i>
+                        <p>Nenhuma anotação menciona este contato.</p>
                     </div>
                 </div>
 
-                <div class="p-4 p-md-5">
-
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="d-flex align-items-start mb-4">
-                                <div class="bg-light p-2 rounded me-3 text-primary">
-                                    <i class="bi bi-envelope-check"></i>
-                                </div>
-                                <div>
-                                    <div class="info-label">E-mail Profissional / Pessoal</div>
-                                    <div class="info-value">@Html.DisplayFor(model => model.Email)</div>
-                                </div>
+                <div id="tarefas" class="tab-pane">
+                    <ul class="activity-list">
+                        @if (Model.Tarefas == null || !Model.Tarefas.Any())
+                        {
+                            <div class="empty-state">
+                                <i class="fas fa-tasks"></i>
+                                <p>Nenhuma tarefa envolve este contato.</p>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="d-flex align-items-start mb-4">
-                                <div class="bg-light p-2 rounded me-3 text-primary">
-                                    <i class="bi bi-telephone fs-5"></i>
-                                </div>
-                                <div>
-                                    <div class="info-label">Telefone / Celular</div>
-                                    <div class="info-value">@Html.DisplayFor(model => model.Telefone)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="d-flex align-items-start mb-4">
-                                <div class="bg-light p-2 rounded me-3 text-primary">
-                                    <i class="bi bi-book fs-5"></i>
-                                </div>
-                                <div>
-                                    <div class="info-label">Observações / Descrição</div>
-                                    <div class="info-value">@Html.DisplayFor(model => model.Descricao)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        }
+                        else if (Model.Tarefas != null)
+                        {
+                            @foreach (var task in Model.Tarefas)
+                            {
+                                <a class="activity-item" asp-controller="Tarefa" asp-action="Editar" asp-route-id="@task.Id">
+                                    <div class="activity-info">
+                                        <strong>@task.Titulo</strong>
+                                        @if (task.DataFim != null)
+                                        {
+                                            <span>Prazo: @task.DataFim?.ToString("dd/MM/yyyy HH:mm")</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Sem prazo definido</span>
+                                        }
+                                    </div>
+                                    @if (task.Status.ToString() == "Pendente")
+                                    {
+                                        <span class="badge">@task.Status</span>
+                                    }
+                                    else if (task.Status.ToString() == "Executando")
+                                    {
+                                        <span class="badge executando">@task.Status</span>
+                                    }
+                                    else if (task.Status.ToString() == "Concluida")
+                                    {
+                                        <span class="badge success">@task.Status</span>
+                                    }
+                                </a>
+                            }
+                        }
+                    </ul>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="modalExcluirTarefa" tabindex="-1" aria-labelledby="modalExcluirTarefaLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-danger" id="modalExcluirTarefaLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+
+                <div class="modal-body text-secondary mt-2">
+                    Tem certeza que deseja excluir o contato <strong>"@Model.Nome"</strong>? <br>
+                    Esta ação é permanente e não poderá ser desfeita.
+                </div>
+
+                <div class="modal-footer border-0 pt-1 pb-3">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                            style="border-radius: 8px; font-weight: 500;">Cancelar</button>
+
+                    <form asp-action="Deletar" method="post" class="m-0">
+                        <input type="hidden" name="Id" value="@Model.Id" />
+                        <input type="hidden" id="RotaDeRetorno" name="RotaDeRetorno" value="" />
+                        <button type="submit" class="btn btn-danger" style="border-radius: 8px; font-weight: 500;">Sim,
+                            Excluir</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const card = document.querySelector('.profile-card-unique');
+
+                // 1. Animação de Entrada "Spring"
+                card.style.opacity = "0";
+                card.style.transform = "scale(0.8) translateY(30px)";
+    
+                setTimeout(() => {
+                    card.style.transition = "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                    card.style.opacity = "1";
+                    card.style.transform = "scale(1) translateY(0)";
+                }, 200);
+
+
+                // 3. Efeito Parallax suave no mouse
+                card.addEventListener('mousemove', (e) => {
+                    let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                    let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                    card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+                });
+            });
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const tabs = document.querySelectorAll('.tab-btn');
+                const panes = document.querySelectorAll('.tab-pane');
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const target = tab.getAttribute('data-tab');
+
+                        // Heurística de Feedback Visual: Remove ativo de todos
+                        tabs.forEach(t => t.classList.remove('active'));
+                        panes.forEach(p => p.classList.remove('active'));
+
+                        // Adiciona ativo ao selecionado
+                        tab.classList.add('active');
+                        document.getElementById(target).classList.add('active');
+                    });
+                });
+            });
+
+            function toggleFlip() {
+                const flipper = document.getElementById('cardFlipper');
+                flipper.classList.toggle('is-flipped');
+            }
+
+            // Opcional: Impedir que o form seja enviado se houver erro básico 
+            // (Auxilia na Heurística de Prevenção de Erros)
+            document.querySelector('form').addEventListener('submit', function (e) {
+                const nome = document.querySelector('[name="Nome"]').value;
+                if (nome.length < 3) {
+                    alert("Por favor, insira um nome válido.");
+                    e.preventDefault();
+                }
+            });
+
+            const textarea = document.querySelector('textarea[Name="Descricao"]');
+            const charCount = document.getElementById('charCount');
+
+            textarea.addEventListener('input', () => {
+                const length = textarea.value.length;
+                charCount.textContent = `${length} / 50`;
+        
+                if (length >= 48) charCount.classList.add('text-danger');
+                else charCount.classList.remove('text-danger');
+            });
+        </script>
+
+           
+
+                      

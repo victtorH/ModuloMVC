@@ -11,12 +11,12 @@ using System.Security.Claims;
 
 namespace ModuloMVC.Context
 {
-    public class AgendaContext : IdentityDbContext<IdentityUser>
+    public class TEnancyDB : IdentityDbContext<IdentityUser>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AgendaContext(
-            DbContextOptions<AgendaContext> options,
+        public TEnancyDB(
+            DbContextOptions<TEnancyDB> options,
             IHttpContextAccessor httpContextAccessor) : base(options)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -48,10 +48,21 @@ namespace ModuloMVC.Context
                 .SelectMany(t => t.GetForeignKeys())
                 .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
 
-            foreach (var fk in cascadeFKs)
-            {
-                fk.DeleteBehavior = DeleteBehavior.Restrict;
-            }
+        foreach (var fk in cascadeFKs)
+{
+    // Verificamos se a entidade é uma tabela de "ligação" (Many-to-Many)
+    // Geralmente o EF as nomeia combinando os nomes ou usando dicionários
+    if (fk.DeclaringEntityType.IsPropertyBag || fk.DeclaringEntityType.Name.Contains("TarefaContato"))
+    {
+        // Para tabelas de ligação, MANTEMOS o Cascade
+        fk.DeleteBehavior = DeleteBehavior.Cascade;
+    }
+    else
+    {
+        // Para o restante das tabelas (como Usuario -> Tarefa), mantemos o Restrict
+        fk.DeleteBehavior = DeleteBehavior.Restrict;
+    }
+}
 
             // --- CONFIGURAÇÃO DA TAREFA DIRETO NO DBCONTEXT ---
 
@@ -73,6 +84,9 @@ namespace ModuloMVC.Context
 
             tarefaBuilder.Property(t => t.Status)
                         .HasConversion<string>();
+
+            tarefaBuilder.HasMany(t => t.ContatosEnvolvidos)
+                        .WithMany(c => c.TarefasEnvolvidas);
 
 
         }

@@ -189,7 +189,8 @@ namespace ModuloMVC.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Descricao = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    Vencimento = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataInicio = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataFim = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -209,11 +210,11 @@ namespace ModuloMVC.Migrations
                 columns: table => new
                 {
                     ContatosEnvolvidosId = table.Column<int>(type: "int", nullable: false),
-                    TarefasId = table.Column<int>(type: "int", nullable: false)
+                    TarefasEnvolvidasId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContatoTarefa", x => new { x.ContatosEnvolvidosId, x.TarefasId });
+                    table.PrimaryKey("PK_ContatoTarefa", x => new { x.ContatosEnvolvidosId, x.TarefasEnvolvidasId });
                     table.ForeignKey(
                         name: "FK_ContatoTarefa_Contato_ContatosEnvolvidosId",
                         column: x => x.ContatosEnvolvidosId,
@@ -221,8 +222,8 @@ namespace ModuloMVC.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ContatoTarefa_Tarefa_TarefasId",
-                        column: x => x.TarefasId,
+                        name: "FK_ContatoTarefa_Tarefa_TarefasEnvolvidasId",
+                        column: x => x.TarefasEnvolvidasId,
                         principalTable: "Tarefa",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -273,9 +274,9 @@ namespace ModuloMVC.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContatoTarefa_TarefasId",
+                name: "IX_ContatoTarefa_TarefasEnvolvidasId",
                 table: "ContatoTarefa",
-                column: "TarefasId");
+                column: "TarefasEnvolvidasId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tarefa_UserId",

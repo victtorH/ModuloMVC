@@ -1,4 +1,4 @@
-@model IEnumerable<ModuloMVC.Models.Tarefa>
+@model IEnumerable<ModuloMVC.ViewModels.TarefaViewModel>
 
 @{
     ViewData["Title"] = "Minhas Tarefas";
@@ -127,23 +127,47 @@
 
                         <div class="task-metadata mt-auto pt-3">
                             <div class="meta-item">
-                                <i class="bi bi-calendar3 me-2"></i>
-                                @if (task.Vencimento.HasValue)
+                                <i class="bi bi-calendar me-2"></i>
+                                @if (task.DataInicio.HasValue)
                                 {
-                                    <span class="fw-medium">@task.Vencimento.Value.ToString("dd/MM/yyyy")</span>
+                                    <span class="fw-medium">@task.DataInicio.Value.ToString("dd/MM/yyyy HH:mm")</span>
                                 }
                                 else
                                 {
-                                    <span class="text-placeholder opacity-50">Sem prazo definido</span>
+                                    <span class="text-placeholder opacity-50">Sem data de inicio definida</span>
                                 }
                             </div>
                             
-                            <div class="meta-item mt-2">
-                                <span class="badge-status">
-                                    <i class="bi bi-circle-fill me-2 tiny-dot"></i> @task.Status
-                                </span>
+                                <div class="meta-item">
+                                <i class="bi bi-calendar-check me-2"></i>
+                                @if (task.DataFim.HasValue)
+                                {
+                                    <span class="fw-medium">@task.DataFim.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-placeholder opacity-50">Sem vencimento definido</span>
+                                }
                             </div>
-                        </div>
+</div>
+                            <div class="meta-item mt-2">
+                                @if(task.Status.ToString() == "Pendente") {
+                                    <span class="badge-status pendente ">
+                                        <i class="bi bi-circle-fill me-2 tiny-dot"></i> Pendente
+                                    </span>
+                                }
+                                else if(task.Status.ToString() == "Executando") {
+                                    <span class="badge-status executando">
+                                        <i class="bi bi-circle-fill me-2 tiny-dot"></i> Executando
+                                    </span>
+                                }
+                                else if(task.Status.ToString() == "Concluida") {
+                                    <span class="badge-status success">
+                                        <i class="bi bi-circle-fill me-2 tiny-dot"></i> Concluído
+                                    </span>
+                                }
+                            </div>
+                        
 
                         <div class="task-team mt-3 border-top pt-3">
                             @if (task.ContatosEnvolvidos != null && task.ContatosEnvolvidos.Any())

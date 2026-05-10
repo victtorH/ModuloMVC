@@ -541,3 +541,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .editar-validation-indicator .bi-check-circle-fill {
     opacity: 0; transform: scale(0.5); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+.task-metadata {
+    display: flex; 
+    flex-direction: column;
+     gap: 5px;
+    font-size: .8rem;
+   
+}
+
+ .pendente {
+    color: #64748b;
+}
+
+ .executando {
+    color: #215093;
+}
+
+ .success {
+    color: #2ecc71;
+}

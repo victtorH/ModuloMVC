@@ -14,31 +14,33 @@ namespace ModuloMVC.Models
         public IdentityUser User {get; set;}
         public string? Titulo { get; private set; }
         public string? Descricao { get; private set; }
-        public DateTime? Vencimento { get; private set; }
-    
+        public DateTime? DataInicio { get; private set; }
+        public DateTime? DataFim{ get; private set; }
         public StatusTarefa Status { get; private set; }
 
         private readonly List<Contato> _contatosEnvolvidos;
         public IReadOnlyCollection<Contato> ContatosEnvolvidos => _contatosEnvolvidos.AsReadOnly();
 
-        public Tarefa(string? titulo, string? descricao, DateTime? vencimento)
+        public Tarefa(string? titulo, string? descricao, DateTime? dataInicio, DateTime? dataFim)
         {
-            Validar(titulo, descricao);
+            Validar(titulo, descricao, dataInicio, dataFim);
 
             Titulo = titulo;
             Descricao = descricao;
-            Vencimento = vencimento;
+            DataInicio = dataInicio;
+            DataFim = dataFim;
             Status = StatusTarefa.Pendente;
             _contatosEnvolvidos = new List<Contato>();
         }
 
-        public void AtualizarTarefa(string? titulo, string? descricao, DateTime? vencimento, StatusTarefa status)
+        public void AtualizarTarefa(string? titulo, string? descricao, DateTime? dataInicio, DateTime? dataFim, StatusTarefa status)
         {
-            Validar(titulo, descricao); 
-            
+            Validar(titulo, descricao, dataInicio, dataFim);
+
             Titulo = titulo;
             Descricao = descricao;
-            Vencimento = vencimento;
+            DataInicio = dataInicio;
+            DataFim = dataFim;
             Status = status;
         }
 
@@ -47,6 +49,7 @@ namespace ModuloMVC.Models
         {
             _contatosEnvolvidos = new List<Contato>();
         }
+
 
         public void AdicionarContato(Contato contato)
         {
@@ -60,19 +63,30 @@ namespace ModuloMVC.Models
 
         public void AtualizarContatos(IEnumerable<Contato> novosContatos)
         {
-            _contatosEnvolvidos.Clear(); 
+            var contatosParaRemover = _contatosEnvolvidos.Where(c => !novosContatos.Any(nc => nc.Id == c.Id)).ToList();
+            foreach (var contato in contatosParaRemover)
+            {
+                _contatosEnvolvidos.Remove(contato);
+            }
+
             foreach (var contato in novosContatos)
             {
-                _contatosEnvolvidos.Add(contato); 
+                if (!_contatosEnvolvidos.Any(c => c.Id == contato.Id))
+                {
+                    _contatosEnvolvidos.Add(contato);
+                }
             }
         }
 
-        private void Validar(string? titulo, string? descricao)
+        private void Validar(string? titulo, string? descricao, DateTime? dataInicio, DateTime? dataFim)
         {
             if (string.IsNullOrWhiteSpace(titulo) && string.IsNullOrWhiteSpace(descricao))
                 throw new ArgumentException("O Título ou descrição precisão ser preenchidos.");
 
-    
+            if(dataInicio > dataFim )
+                throw new ArgumentException("A data de início não pode ser posterior à data de fim.");
+            if(dataInicio < DateTime.Now)
+                throw new ArgumentException("A data de início não pode ser anterior à data atual.");
         }
     }
 }

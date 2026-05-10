@@ -1,5 +1,4 @@
-@using Microsoft.AspNetCore.Http.Features
-@model IEnumerable<ModuloMVC.Models.Contato>
+@model IEnumerable<ModuloMVC.ViewModels.ContatoViewModel>
 
 @{
     ViewData["Title"] = "Meus Contatos";
@@ -48,36 +47,20 @@
                         <div class="filter-section mb-3">
                             <label for="filtroNome" class="form-label fs-7 fw-medium text-muted">Nome</label>
                             <input type="text" id="filtroNome" class="form-control form-control-sm custom-input-filter"
-                                   placeholder="Buscar por nome...">
+                               name="nome"    placeholder="Buscar por nome...">
                         </div>
 
                         <div class="filter-section mb-3">
                             <label for="filtroNumero" class="form-label fs-7 fw-medium text-muted">Telefone /
                                 Numero</label>
                                 <input type="tel" id="filtroNumero"
-                                       class="form-control form-control-sm custom-input-filter">
+                                   name="numero"    class="form-control form-control-sm custom-input-filter">
                             </div>
        
                             <div class="filter-section mb-3">
                                 <label for="filtroEmail" class="form-label fs-7 fw-medium text-muted">E-mail</label>
-                                <input type="email" id="filtroEmail"
+                                <input type="email" name="email" id="filtroEmail"
                                        class="form-control form-control-sm custom-input-filter">
-                            </div>
-
-                            <div class="filter-section mb-4">
-                                <label class="form-label fs-7 fw-medium text-muted">Status</label>
-                                <div class="d-flex flex-wrap gap-2">
-                                    <div class="form-check custom-filter-check">
-                                        <input class="form-check-input status-checkbox" type="checkbox" value="true"
-                                               id="statusAtivo">
-                                        <label class="form-check-label text-muted fs-7" for="statusAtivo">Ativo</label>
-                                    </div>
-                                    <div class="form-check custom-filter-check">
-                                        <input class="form-check-input status-checkbox" type="checkbox" value="false"
-                                               id="statusInativo">
-                                        <label class="form-check-label text-muted fs-7" for="statusInativo">Inativo</label>
-                                    </div>
-                                </div>
                             </div>
 
           
@@ -108,7 +91,7 @@
                 {
                     foreach (var item in Model)
                     {
-                        <div class="contact-card">
+                        <a class="contact-card" asp-action="Detalhes" asp-route-id="@item.Id">
 
                             <div class="contact-info-group">
                                 <div class="avatar-circle">
@@ -117,51 +100,32 @@
 
                                 <div class="contact-details">
                                     <div class="d-flex align-items-center gap-2">
-                                        @if ( item.Nome.Length <= 15)
+                                        @if ( item.Nome.Length <= 25)
                                         {
                                             <span class="contact-name">@item.Nome</span>
                                         }
                                         else
                                         {
                                             <span class="contact-name" title="@item.Nome">
-                                                @item.Nome.Substring(0, 15)...
+                                                @item.Nome.Substring(0, 25)...
                                             </span>
                                         }
 
-                                        @if (item.Status)
-                                        {
-                                            <span class="status-badge status-active">Ativo</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="status-badge status-inactive">Inativo</span>
-                                        }
                                     </div>
 
                                     <div class="contact-meta">
-                                        @if(item.Email.Length < 10){
-                                        <span><i class="bi bi-envelope"></i> @Html.DisplayFor(c => item.Email)</span>
+                                        @if(item.Email.Length < 25){
+                                        <span><i class="bi bi-envelope"></i> @item.Email</span>
                                         }else{
-                                            <span><i class="bi bi-envelope"></i> @item.Email.Substring(0,10) ...</span>
+                                            <span><i class="bi bi-envelope"></i> @item.Email.Substring(0,25) ...</span>
                                         }
-                                        <span><i class="bi bi-telephone"></i> @item.Telefone</span>
+                                        <span><i class="bi bi-telephone"></i>  @Convert.ToUInt64(item.Telefone).ToString(@"(00) 00000-0000")</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="actions-wrapper">
-                                <a asp-action="Editar" asp-route-id="@item.Id" class="action-icon-btn btn-edit" title="Editar">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
-                                <a asp-action="Detalhes" asp-route-id="@item.Id" class="action-icon-btn btn-details"
-                                       title="Detalhes">
-                                    <i class="bi bi-file-earmark-text-fill"></i>
-                                </a>
-                                <a asp-action="Deletar" asp-route-id="@item.Id" class="action-icon-btn btn-delete" title="Excluir">
-                                    <i class="bi bi-trash-fill"></i>
-                                </a>
-                            </div>
-                        </div>
+
+                        </a>
                     }
                 }
                 else

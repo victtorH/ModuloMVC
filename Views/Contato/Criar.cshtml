@@ -1,9 +1,9 @@
-@model ModuloMVC.Models.Contato
+@model ModuloMVC.ViewModels.ContatoViewModel
 
 @{
     ViewData["Title"] = "Novo Contato";
 }
-<link rel="stylesheet" href="~/css/Contato.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/ContatoCriar.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/ContatoResp.css" asp-append-version="true" />
 
 <div class="create-wrapper-clean container pb-5 min-vh-100 d-flex flex-column">
@@ -48,8 +48,9 @@
                 <h3 class="text-slate fw-bold mb-4">Cadastrar Contato</h3>
 
                 <form asp-action="Criar" id="contactForm">
-                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
 
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                    
                     <div class="input-group-clean mb-4">
                         <label asp-for="Nome" class="form-label-clean">Nome completo</label>
                         <input asp-for="Nome" class="form-control input-clean-fluid" placeholder="Digite o nome completo" autofocus />
@@ -71,7 +72,7 @@
                     <div class="input-group-clean mb-5">
                         <label asp-for="Descricao" class="form-label-clean d-flex justify-content-between">
                             Observações
-                            <span id="charCount" class="text-muted small fw-normal">0 / 300</span>
+                            <span id="charCount" class="text-muted small fw-normal">0 / 50</span>
                         </label>
                         <textarea asp-for="Descricao" class="form-control input-clean-fluid custom-textarea-fluid" 
                                   placeholder="Conte-me sobre o contato ou adicione notas relevantes..."></textarea>
@@ -99,9 +100,9 @@
         if(textarea && charCount) {
             textarea.addEventListener('input', () => {
                 const length = textarea.value.length;
-                charCount.textContent = `${length} / 300`;
+                charCount.textContent = `${length} / 50`;
                 
-                if (length >= 280) {
+                if (length >= 48) {
                     charCount.classList.add('text-danger', 'fw-bold');
                 } else {
                     charCount.classList.remove('text-danger', 'fw-bold');

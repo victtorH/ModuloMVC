@@ -6,107 +6,61 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using ModuloMVC.Context;
+using ModuloMVC.Enum;
+using ModuloMVC.Interfaces;
 using ModuloMVC.Models;
 
 
 namespace ModuloMVC.Services
 {
-    public class ContatoService
+    public class ContatoService : IContatoService
     {
 
-
-        protected readonly AgendaContext _context;
-        public ContatoService(AgendaContext context)
+            private readonly IContatoRepository _contatoRepository;
+            private readonly ITarefasRepository _tarefasRepository;
+        public ContatoService(IContatoRepository contatoRepository, ITarefasRepository tarefasRepository)
         {
-            _context = context;
+            _contatoRepository = contatoRepository;
+            _tarefasRepository = tarefasRepository;
         }
 
-
-        public async Task<List<Contato>> ListarTodosAsync(string? nome, string? numero, string? email, List<bool>? status)
+        public async Task Create(string nome, string email, string telefone, string? descricao)
         {
-            var query = _context.Contato
-            .OrderBy(c => c.Nome)
-            .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(nome))
-            {
-                query = query.Where(c => c.Nome.Contains(nome));
-            }
-
-            if (!string.IsNullOrWhiteSpace(numero))
-            {
-                query = query.Where(c => c.Telefone.Contains(numero)); 
-            }
-
-            if (!string.IsNullOrWhiteSpace(email))
-            {
-                query = query.Where(c => c.Email.Contains(email));
-            }
-
-      
-            if (status != null && status.Any())
-            {
-                query = query.Where(c => status.Contains(c.Status));
-            }
-
-           
-            return await query.ToListAsync();
+           var contato = new Contato(nome, email, telefone, descricao);
+           await _contatoRepository.CreateContato(contato);
         }
 
-        private async Task ValidarSeJaExiste(string email, string telefone, int idDesconsiderado = 0)
+        public async Task Delete(int id)
         {
-
-            bool contatoDuplicado = await _context.Contato.AnyAsync(c =>
-                (c.Email == email || c.Telefone == telefone) &&
-                c.Id != idDesconsiderado);
-
-            if (contatoDuplicado)
-            {
-                throw new InvalidOperationException("Já existe um contato cadastrado com este E-mail ou Telefone.");
-            }
+            await _contatoRepository.DeleteContato(id);
         }
 
-        public async Task CriarUm(string nome, string email, string telefone, string? descricao)
+        public async Task<List<(int id, string nome, string email, string telefone)>> GetAll(string nome, string email, string telefone)
         {
-           await ValidarSeJaExiste(email, telefone);
+           var contatos = await _contatoRepository.GetAllContatos(nome, email, telefone);
+           return contatos.Select(c => (c.Id, c.Nome, c.Email, c.Telefone)).ToList();
+        }
+    
 
-            Contato NovoContato =  new Contato(nome, email, telefone, descricao);
-
-           await _context.Contato.AddAsync(NovoContato);
-            await _context.SaveChangesAsync();
+        public async Task<(int id, string nome, string email, string telefone, string descricao, bool status, List<(int id, string titulo, string descricao, DateTime? datainicio, DateTime? datafim, StatusTarefa status)>)> GetById(int id)
+        {
+            var contato = await _contatoRepository.GetByIdContato(id);
+            
+            return (contato.Id, contato.Nome, contato.Email, contato.Telefone, contato.Descricao, contato.Status, contato.TarefasEnvolvidas.Select(t => (t.Id, t.Titulo, t.Descricao, t.DataInicio, t.DataFim, t.Status)).ToList());
         }
 
-
-        public async Task<Contato> BuscarPorId(int id)
+        public async Task<List<(int id, string titulo, string descricao, DateTime? datainicio, DateTime? datafim)>> GetTarefasEnvolvidas(int contatoId)
         {
-            var contato = await _context.Contato.FindAsync(id);
-            if (contato == null)
-            {
-                throw new ArgumentException("Contato solicitado não existe");
-            }
-
-            return contato;
+            var contato = await _contatoRepository.GetByIdContato(contatoId);
+            var tarefas = contato.TarefasEnvolvidas;
+            return tarefas.Select(t => (t.Id, t.Titulo, t.Descricao, t.DataInicio, t.DataFim)).ToList();
         }
 
-        public async Task DeletarUm(int id)
+        public async Task Update(int id, string nome, string email, string telefone, bool status, string? descricao)
         {
-
-            _context.Contato.Remove( await BuscarPorId(id));
-      await _context.SaveChangesAsync();
+            var contato = await _contatoRepository.GetByIdContato(id);
+            contato.AtualizarDados(nome, email, telefone, status, descricao);
+            await _contatoRepository.UpdateContato(contato);
         }
-
-
-        public async Task EditarUm(int id, string nome, string email, string telefone, bool status, string? descricao)
-        {
-
-            var contatodb = await BuscarPorId(id);
-            await  ValidarSeJaExiste(contatodb.Nome, contatodb.Email, id);
-
-
-            contatodb.AtualizarDados(nome, email, telefone, status, descricao);
-           await _context.SaveChangesAsync();
-        }
-
-
     }
 }

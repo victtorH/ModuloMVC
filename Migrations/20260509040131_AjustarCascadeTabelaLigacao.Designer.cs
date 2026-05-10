@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ModuloMVC.Context;
 
@@ -10,10 +11,12 @@ using ModuloMVC.Context;
 
 namespace ModuloMVC.Migrations
 {
-    [DbContext(typeof(AgendaContext))]
-    partial class AgendaContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TEnancyDB))]
+    [Migration("20260509040131_AjustarCascadeTabelaLigacao")]
+    partial class AjustarCascadeTabelaLigacao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,12 +30,12 @@ namespace ModuloMVC.Migrations
                     b.Property<int>("ContatosEnvolvidosId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TarefasId")
+                    b.Property<int>("TarefasEnvolvidasId")
                         .HasColumnType("int");
 
-                    b.HasKey("ContatosEnvolvidosId", "TarefasId");
+                    b.HasKey("ContatosEnvolvidosId", "TarefasEnvolvidasId");
 
-                    b.HasIndex("TarefasId");
+                    b.HasIndex("TarefasEnvolvidasId");
 
                     b.ToTable("ContatoTarefa");
                 });
@@ -280,6 +283,12 @@ namespace ModuloMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("DataFim")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataInicio")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Descricao")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
@@ -296,9 +305,6 @@ namespace ModuloMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("Vencimento")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
@@ -314,13 +320,13 @@ namespace ModuloMVC.Migrations
                     b.HasOne("ModuloMVC.Models.Contato", null)
                         .WithMany()
                         .HasForeignKey("ContatosEnvolvidosId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ModuloMVC.Models.Tarefa", null)
                         .WithMany()
-                        .HasForeignKey("TarefasId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("TarefasEnvolvidasId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

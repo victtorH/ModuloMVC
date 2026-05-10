@@ -7,31 +7,46 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using ModuloMVC.Enum;
-using ModuloMVC.Models;
-using ModuloMVC.Services;
 using ModuloMVC.ViewModels;
+using ModuloMVC.Interfaces;
 
 namespace ModuloMVC.Controllers
 {
     [Authorize]
     public class TarefaController : Controller
     {
-        private readonly TarefaService _service;
+        private readonly ITarefaService _service;
 
-        public TarefaController(TarefaService service)
+        public TarefaController(ITarefaService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? titulo, DateTime? data, List<StatusTarefa>? status, string? visao = "hoje")
+        public async Task<IActionResult> Index(string? titulo, DateTime? datainicio, DateTime? datafim, List<StatusTarefa>? status, string visao = "hoje")
         {
 
             ViewBag.VisaoAtual = visao;
 
-            var listaFiltrada = await _service.ListarTodosAsync(titulo, data, status, visao);
 
-            return View(listaFiltrada);
+            var listaFiltrada = await _service.GetAll(titulo, datainicio, datafim, status != null && status.Count > 0 ? status[0] : (StatusTarefa?)null, visao );
+             
+            
+            var tarefasViewModel = new List<TarefaViewModel>();
+            foreach (var tarefa in listaFiltrada)
+            {
+                tarefasViewModel.Add(new TarefaViewModel
+                {
+                    Id = tarefa.id,
+                    Titulo = tarefa.titulo,
+                    Descricao = tarefa.descricao,
+                    DataInicio = tarefa.dataInicio,
+                    DataFim = tarefa.dataFim,
+                    Status = tarefa.status,
+                    ContatosEnvolvidos = tarefa.Item7.Select(c => new ContatoViewModel { Id = c.id, Nome = c.nome, Email = c.email }).ToList()
+                });
+            }
+            return View(tarefasViewModel);
         }
 
 
@@ -39,14 +54,12 @@ namespace ModuloMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Criar()
         {
-            var contatosDoBanco = await _service.ListarContatos();
+            var contatosDoBanco = await _service.GetAllContatos();
             var contatosParaTela = contatosDoBanco.Select(c => new ContatoViewModel
             {
-                Id = c.Id,
-                Nome = c.Nome,
-                Email = c.Email,
-                Telefone = c.Telefone,
-                Status = c.Status
+                Id = c.id,
+                Nome = c.nome,
+                Email = c.email,
             }).ToList();
 
             var viewModel = new TarefaViewModel
@@ -66,14 +79,13 @@ namespace ModuloMVC.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    var contatosDoBanco = await _service.ListarContatos();
-                    tarefa.ContatosEnvolvidos = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.Id, Nome = c.Nome }).ToList();
+                    var contatosDoBanco = await _service.GetAllContatos();
+                    tarefa.ContatosEnvolvidos = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.id, Nome = c.nome }).ToList();
 
                     return View(tarefa);
                 }
                 var ListaIds = tarefa.ContatosSelecionadosIds ?? new List<int>();
-
-                var TarefaNova = await _service.CriarUmaAsync(tarefa.Titulo, tarefa.Descricao, tarefa.Vencimento, ListaIds);
+                await _service.Create(tarefa.Titulo, tarefa.Descricao, tarefa.DataInicio, tarefa.DataFim, ListaIds);
 
                 if (!string.IsNullOrEmpty(RotaDeRetorno))
                     return Redirect(RotaDeRetorno);
@@ -82,8 +94,8 @@ namespace ModuloMVC.Controllers
             }
             catch (Exception err)
             {
-                var contatosDoBanco = await _service.ListarContatos();
-                tarefa.ContatosEnvolvidos = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.Id, Nome = c.Nome }).ToList();
+                var contatosDoBanco = await _service.GetAllContatos();
+                tarefa.ContatosEnvolvidos = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.id, Nome = c.nome }).ToList();
                 TempData["CriarDublicado"] = "Erro Mensagem:  " + err.Message;
 
                 return View(tarefa);
@@ -95,27 +107,28 @@ namespace ModuloMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Editar(int id)
         {
-            var tarefa = await _service.BuscarComContatosPorIdAsync(id);
-            var contatosDoBanco = await _service.ListarContatos();
-
+            var tarefa = await _service.GetById(id);
+            var contatosDoBanco = await _service.GetAllContatos();
 
             var viewModel = new TarefaEdicaoViewModel
             {
-                Id = tarefa.Id,
+                Id = tarefa.id,
 
-                Titulo = tarefa.Titulo,
-                Descricao = tarefa.Descricao,
-                Vencimento = tarefa.Vencimento,
-                Status = tarefa.Status,
-                ContatosSelecionadosIds = tarefa.ContatosEnvolvidos.Select(c => c.Id).ToList(),
+                Titulo = tarefa.titulo,
+                Descricao = tarefa.descricao,
+                DataInicio = tarefa.dataInicio,
+                DataFim = tarefa.dataFim,
+                Status = tarefa.status,
+                ContatosSelecionadosIds = tarefa.Item7.Select(c => c.id).ToList(),
 
-                TituloAtual = tarefa.Titulo,
-                DescricaoAtual = tarefa.Descricao,
-                VencimentoAtual = tarefa.Vencimento,
-                StatusAtual = tarefa.Status,
-                ContatosEnvolvidosAtuais = tarefa.ContatosEnvolvidos.Select(c => new ContatoViewModel { Nome = c.Nome }).ToList(),
+                TituloAtual = tarefa.titulo,
+                DescricaoAtual = tarefa.descricao,
+                DataInicioAtual = tarefa.dataInicio,
+                DataFimAtual = tarefa.dataFim,
+                StatusAtual = tarefa.status,
+                ContatosEnvolvidosAtuais = tarefa.Item7.Select(c => new ContatoViewModel { Nome = c.nome }).ToList(),
 
-                TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.Id, Nome = c.Nome, Email = c.Email }).ToList()
+                TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.id, Nome = c.nome, Email = c.email }).ToList()
             };
 
             return View(viewModel);
@@ -128,14 +141,14 @@ namespace ModuloMVC.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    var contatosDoBanco = await _service.ListarContatos();
-                    model.TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.Id, Nome = c.Nome, Email = c.Email }).ToList();
+                    var contatosDoBanco = await _service.GetAllContatos();
+                    model.TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.id, Nome = c.nome, Email = c.email }).ToList();
                     return View(model);
                 }
 
                 var listaIds = model.ContatosSelecionadosIds ?? new List<int>();
 
-                await _service.AtualizarUmaAsync(id, model.Titulo, model.Descricao, model.Vencimento, model.Status, listaIds);
+                await _service.Update(id, model.Titulo, model.Descricao, model.DataInicio, model.DataFim, model.Status, listaIds);
 
                 if (!string.IsNullOrEmpty(RotaDeRetorno))
                     return Redirect(RotaDeRetorno);
@@ -145,8 +158,8 @@ namespace ModuloMVC.Controllers
             }
             catch (Exception err)
             {
-                var contatosDoBanco = await _service.ListarContatos();
-                model.TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.Id, Nome = c.Nome, Email = c.Email }).ToList();
+                var contatosDoBanco = await _service.GetAllContatos();
+                model.TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.id, Nome = c.nome, Email = c.email }).ToList();
 
                 TempData["CriarDublicado"] = "Erro Mensagem:  " + err.Message;
                 return View(model);
@@ -160,7 +173,7 @@ namespace ModuloMVC.Controllers
         {
             try
             {
-                await _service.ExcluirUm(id);
+                await _service.Delete(id);
 
                 TempData["ExcluirTarefa"] = "1";
 
