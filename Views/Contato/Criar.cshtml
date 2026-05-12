@@ -66,7 +66,6 @@
                     <div class="input-group-clean mb-4">
                         <label asp-for="Telefone" class="form-label-clean">Telefone / WhatsApp</label>
                         <input type="tel" asp-for="Telefone" class="form-control input-clean-fluid" placeholder="(11) 90000-0000" />
-                        <span asp-validation-for="Telefone" class="text-danger small mt-1 d-block"></span>
                     </div>
 
                     <div class="input-group-clean mb-5">
@@ -92,7 +91,32 @@
     </div>
 </div>
 
+        @if (TempData["ErrorCotato"] != null )
+        {
+            <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+                <div id="toastNotificacao" class="toast align-items-center text-white bg-danger border-0 shadow-lg" role="alert"
+                     aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
+                    <div class="d-flex">
+                        <div class="toast-body fw-medium">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorCotato"]
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                                aria-label="Fechar"></button>
+                    </div>
+                </div>
+            </div>
+        }
+
+
 <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var toastElement = document.getElementById('toastNotificacao');
+        if (toastElement) {
+            var toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }      
+    });
     document.addEventListener("DOMContentLoaded", function () {
         const textarea = document.querySelector('textarea[name="Descricao"]');
         const charCount = document.getElementById('charCount');

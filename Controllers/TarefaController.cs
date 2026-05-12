@@ -86,7 +86,7 @@ namespace ModuloMVC.Controllers
                 }
                 var ListaIds = tarefa.ContatosSelecionadosIds ?? new List<int>();
                 await _service.Create(tarefa.Titulo, tarefa.Descricao, tarefa.DataInicio, tarefa.DataFim, ListaIds);
-
+                TempData["MensagemTarefa"] = "Tarefa criada com sucesso";
                 if (!string.IsNullOrEmpty(RotaDeRetorno))
                     return Redirect(RotaDeRetorno);
 
@@ -96,7 +96,7 @@ namespace ModuloMVC.Controllers
             {
                 var contatosDoBanco = await _service.GetAllContatos();
                 tarefa.ContatosEnvolvidos = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.id, Nome = c.nome }).ToList();
-                TempData["CriarDublicado"] = "Erro Mensagem:  " + err.Message;
+                TempData["MensagemTarefa"] = "Erro Mensagem:  " + err.Message;
 
                 return View(tarefa);
             }
@@ -161,7 +161,7 @@ namespace ModuloMVC.Controllers
                 var contatosDoBanco = await _service.GetAllContatos();
                 model.TodosContatosDisponiveis = contatosDoBanco.Select(c => new ContatoViewModel { Id = c.id, Nome = c.nome, Email = c.email }).ToList();
 
-                TempData["CriarDublicado"] = "Erro Mensagem:  " + err.Message;
+                TempData["MensagemTarefa"] = "Erro Mensagem:  " + err.Message;
                 return View(model);
             }
 
@@ -175,7 +175,7 @@ namespace ModuloMVC.Controllers
             {
                 await _service.Delete(id);
 
-                TempData["ExcluirTarefa"] = "1";
+                TempData["MensagemTarefa"] = "Tarefa apagada com sucesso!";
 
                 if (!string.IsNullOrEmpty(RotaDeRetorno))
                     return Redirect(RotaDeRetorno);
@@ -184,7 +184,7 @@ namespace ModuloMVC.Controllers
             }
             catch (Exception err)
             {
-                TempData["ExcluirTarefa"] = "Não foi possível excluir: " + err.Message;
+                TempData["MensagemTarefa"] = "Não foi possível excluir: " + err.Message;
                 return RedirectToAction("Editar", new { id = id });
             }
 

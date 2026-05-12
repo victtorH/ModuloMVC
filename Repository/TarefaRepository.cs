@@ -31,6 +31,11 @@ namespace ModuloMVC.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<bool> Exist(Tarefa tarefa, int? idtarefa)
+        {
+         return await _context.Tarefa.AnyAsync(t => t.Titulo == tarefa.Titulo && t.Descricao == tarefa.Descricao && t.Id != idtarefa);
+        }
+
         public async Task<List<Tarefa>> GetAllTarefas(string? titulo, DateTime? dataInicio, DateTime? dataFim, StatusTarefa? status, visaotarefa? visao)
         {
             var query = _context.Tarefa.Include(t => t.ContatosEnvolvidos).AsQueryable();
@@ -49,11 +54,11 @@ namespace ModuloMVC.Repository
 
                 if (visao != null)
             {
-                var hoje = DateTime.Now;
+                var hoje = DateTime.Now.AddMinutes(-1);
                 switch (visao)
                 {
                     case visaotarefa.hoje:
-                        query = query.Where(t => t.DataInicio >= hoje);
+                        query = query.Where(t =>  t.DataFim >= hoje);
                         break;
                     case visaotarefa.atrasadas:
                         query = query.Where(t => t.DataFim < hoje);

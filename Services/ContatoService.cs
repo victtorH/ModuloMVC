@@ -17,11 +17,10 @@ namespace ModuloMVC.Services
     {
 
             private readonly IContatoRepository _contatoRepository;
-            private readonly ITarefasRepository _tarefasRepository;
+
         public ContatoService(IContatoRepository contatoRepository, ITarefasRepository tarefasRepository)
         {
             _contatoRepository = contatoRepository;
-            _tarefasRepository = tarefasRepository;
         }
 
         public async Task Create(string nome, string email, string telefone, string? descricao)

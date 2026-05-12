@@ -87,7 +87,7 @@ namespace ModuloMVC.Models
                 throw new ArgumentException("Telefone deve conter apenas números.");
             
             if( telefone.Length != 11)
-                throw new ArgumentException("Telefone deve conter DDD e número");
+                throw new ArgumentException("Telefone deve conter apenas DDD e número");
 
             if (!string.IsNullOrWhiteSpace(descricao) && descricao.Length > 50)
                 throw new ArgumentException("A descrição não pode exceder 50 caracteres.");

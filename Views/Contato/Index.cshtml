@@ -32,47 +32,43 @@
             <div class="conteiner flex-row ">
 
                 <div class="dropdown d-inline-block filter-wrapper">
-                    <button class="btn btn-filter dropdown-toggle position-relative" type="button" id="dropdownFiltro"
-                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                        <i class="bi bi-funnel me-1"></i> Filtrar
-                        <span
-                        class="position-absolute top-0 start-100 translate-middle p-1 bg-primary border border-light rounded-circle filter-badge d-none"
-                        id="badgeFiltroAtivo"></span>
-                    </button>
+    <button class="btn btn-filter dropdown-toggle position-relative" type="button" id="dropdownFiltro"
+            data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        <i class="bi bi-funnel me-1"></i> Filtrar
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-primary border border-light rounded-circle filter-badge d-none"
+              id="badgeFiltroAtivo"></span>
+    </button>
 
-                    <div class="dropdown-menu filter-menu shadow-lg border-0 p-4" aria-labelledby="dropdownFiltro"
-                         style="width: 300px;">
-                        <h6 class="dropdown-header px-0 text-dark fw-bold mb-3 fs-6">Refinar Busca</h6>
+    <div class="dropdown-menu filter-menu shadow-lg border-0 p-4" aria-labelledby="dropdownFiltro"
+         style="width: 300px;">
+        <h6 class="dropdown-header px-0 text-dark fw-bold mb-3 fs-6">Refinar Busca</h6>
 
-                        <div class="filter-section mb-3">
-                            <label for="filtroNome" class="form-label fs-7 fw-medium text-muted">Nome</label>
-                            <input type="text" id="filtroNome" class="form-control form-control-sm custom-input-filter"
-                               name="nome"    placeholder="Buscar por nome...">
-                        </div>
+        <div class="filter-section mb-3">
+            <label for="filtroNome" class="form-label fs-7 fw-medium text-muted">Nome</label>
+            <input type="text" id="filtroNome" class="form-control form-control-sm custom-input-filter"
+                   placeholder="Buscar por nome...">
+        </div>
 
-                        <div class="filter-section mb-3">
-                            <label for="filtroNumero" class="form-label fs-7 fw-medium text-muted">Telefone /
-                                Numero</label>
-                                <input type="tel" id="filtroNumero"
-                                   name="numero"    class="form-control form-control-sm custom-input-filter">
-                            </div>
-       
-                            <div class="filter-section mb-3">
-                                <label for="filtroEmail" class="form-label fs-7 fw-medium text-muted">E-mail</label>
-                                <input type="email" name="email" id="filtroEmail"
-                                       class="form-control form-control-sm custom-input-filter">
-                            </div>
+        <div class="filter-section mb-3">
+            <label for="filtroTelefone" class="form-label fs-7 fw-medium text-muted">Telefone / Número</label>
+            <input type="tel" id="filtroTelefone" class="form-control form-control-sm custom-input-filter"
+                   placeholder="(00) 00000-0000">
+        </div>
 
-          
+        <div class="filter-section mb-3">
+            <label for="filtroEmail" class="form-label fs-7 fw-medium text-muted">E-mail</label>
+            <input type="email" id="filtroEmail" class="form-control form-control-sm custom-input-filter"
+                   placeholder="exemplo@email.com">
+        </div>
 
-                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                                <button type="button" class="btn btn-link text-muted text-decoration-none p-0 fs-7"
-                                        id="btnLimparFiltro">Limpar tudo</button>
-                                <button type="button" class="btn btn-dark btn-sm px-4 rounded-pill"
-                                        id="btnAplicarFiltro">Aplicar</button>
-                            </div>
-                        </div>
-                    </div>
+        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 fs-7"
+                    id="btnLimparFiltro">Limpar tudo</button>
+            <button type="button" class="btn btn-dark btn-sm px-4 rounded-pill"
+                    id="btnAplicarFiltro">Aplicar</button>
+        </div>
+    </div>
+</div>
 
                     <a asp-action="Criar" class="btn-create-contact">
                         <div class="add-icon-wrapper">
@@ -141,81 +137,93 @@
     </div>
 </div>
 
+
+@if(TempData["SucesseContato"] != null){
+
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+        <div id="toastNotificacao" class="toast align-items-center border-0 shadow-lg" style="background-color: #e8f5e9; color: #2e7d32;"
+             role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+            <div class="d-flex">
+                <div class="toast-body fw-medium">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i> 
+                    @TempData["SucesseContato"]
+                </div>
+                <button type="button" class="btn-close  me-2 m-auto" 
+                        data-bs-dismiss="toast" aria-label="Fechar"></button>
+            </div>
+        </div>
+    </div>
+
+}
+
 <script>
+
     document.addEventListener("DOMContentLoaded", function () {
-
-        const btnLimpar = document.getElementById('btnLimparFiltro');
-        const btnAplicar = document.getElementById('btnAplicarFiltro');
-        const badge = document.getElementById('badgeFiltroAtivo');
-
-        const inputNome = document.getElementById('filtroNome');
-        const inputNumero = document.getElementById('filtroNumero');
-        const inputEmail = document.getElementById('filtroEmail');
-
-        const checkboxesStatus = document.querySelectorAll('.status-checkbox');
-
-        if (btnAplicar) {
-            btnAplicar.addEventListener('click', function () {
-                const nome = inputNome.value.trim();
-                const numero = inputNumero.value.trim();
-                const email = inputEmail.value.trim();
-
-                const params = new URLSearchParams();
-
-                if (nome) params.append('nome', nome);
-                if (numero) params.append('numero', numero);
-                if (email) params.append('email', email);
-
-                checkboxesStatus.forEach(chk => {
-                    if (chk.checked) {
-                        params.append('status', chk.value);
-                    }
-                });
-
-                const urlBase = window.location.pathname;
-                window.location.href = urlBase + '?' + params.toString();
-            });
-        }
-
-        if (btnLimpar) {
-            btnLimpar.addEventListener('click', function () {
-                window.location.href = window.location.pathname;
-            });
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        let temFiltroAtivo = false;
-
-        if (urlParams.has('nome')) {
-            inputNome.value = urlParams.get('nome');
-            temFiltroAtivo = true;
-        }
-
-        if (urlParams.has('numero')) {
-            inputNumero.value = urlParams.get('numero');
-            temFiltroAtivo = true;
-        }
-
-        if (urlParams.has('email')) {
-            inputEmail.value = urlParams.get('email');
-            temFiltroAtivo = true;
-        }
-
-
-        if (urlParams.has('status')) {
-            const statusNaUrl = urlParams.getAll('status');
-
-            checkboxesStatus.forEach(chk => {
-                if (statusNaUrl.includes(chk.value)) {
-                    chk.checked = true;
-                }
-            });
-            temFiltroAtivo = true;
-        }
-
-
-        if (temFiltroAtivo && badge) {
-            badge.classList.remove('d-none');
-        }
+        var toastElement = document.getElementById('toastNotificacao');
+        if (toastElement) {
+            var toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }      
     });
+
+ document.addEventListener("DOMContentLoaded", function () {
+    console.log("📇 Filtro de Contatos: Ativado");
+
+
+    const btnAplicar = document.getElementById('btnAplicarFiltro');
+    const btnLimpar = document.getElementById('btnLimparFiltro');
+    const badge = document.getElementById('badgeFiltroAtivo');
+
+    const inputNome = document.getElementById('filtroNome');
+    const inputEmail = document.getElementById('filtroEmail');
+    const inputTelefone = document.getElementById('filtroTelefone');
+    
+    sessionStorage.setItem('CaminhoContato', window.location.search);
+
+
+    if (btnAplicar) {
+        btnAplicar.addEventListener('click', function () {
+            const params = new URLSearchParams();
+
+
+            const nome = inputNome.value.trim();
+            const email = inputEmail.value.trim();
+            const telefone = inputTelefone.value.trim();
+
+
+            if (nome) params.set('nome', nome);
+            if (email) params.set('email', email);
+            if (telefone) params.set('telefone', telefone);
+            
+
+            window.location.href = window.location.pathname + '?' + params.toString();
+        });
+    }
+
+    if (btnLimpar) {
+        btnLimpar.addEventListener('click', function () {
+            window.location.href = window.location.pathname;
+        });
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let temFiltroAtivo = false;
+
+    if (urlParams.has('nome')) {
+        inputNome.value = urlParams.get('nome');
+        temFiltroAtivo = true;
+    }
+    if (urlParams.has('email')) {
+        inputEmail.value = urlParams.get('email');
+        temFiltroAtivo = true;
+    }
+    if (urlParams.has('telefone')) {
+        inputTelefone.value = urlParams.get('telefone');
+        temFiltroAtivo = true;
+    }
+
+    if (temFiltroAtivo && badge) {
+        badge.classList.remove('d-none');
+    }
+});
 </script>

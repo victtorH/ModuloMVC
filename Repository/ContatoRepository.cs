@@ -32,21 +32,30 @@ namespace ModuloMVC.Repository
 
         }
 
-        public async Task<List<Contato>> GetAllContatos(string? nome, string? email, string? telefone)
+public async Task<List<Contato>> GetAllContatos(string? nome, string? email, string? telefone)
+{
+
+    var query = _context.Contato.AsNoTracking().AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(nome))
+        query = query.Where(c => c.Nome.Contains(nome));
+
+    if (!string.IsNullOrWhiteSpace(email))
+        query = query.Where(c => c.Email.Contains(email));
+
+    if (!string.IsNullOrWhiteSpace(telefone))
+    {
+
+        string telefoneLimpo = new string(telefone.Where(char.IsDigit).ToArray());
+        
+        if (!string.IsNullOrEmpty(telefoneLimpo))
         {
-            var query = _context.Contato.AsQueryable();
-
-            if (!string.IsNullOrEmpty(nome))
-                query = query.Where(c => c.Nome.Contains(nome));
-
-            if (!string.IsNullOrEmpty(email))
-                query = query.Where(c => c.Email.Contains(email));
-
-            if (!string.IsNullOrEmpty(telefone))
-                query = query.Where(c => c.Telefone.Contains(telefone));
-
-            return await query.ToListAsync();
+            query = query.Where(c => c.Telefone.Contains(telefoneLimpo));
         }
+    }
+
+    return await query.ToListAsync();
+}
 
         public async Task<Contato> GetByIdContato(int id)
         {

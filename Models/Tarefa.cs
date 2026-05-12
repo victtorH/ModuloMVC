@@ -85,7 +85,7 @@ namespace ModuloMVC.Models
 
             if(dataInicio > dataFim )
                 throw new ArgumentException("A data de início não pode ser posterior à data de fim.");
-            if(dataInicio < DateTime.Now)
+            if(dataInicio < DateTime.Now.AddMinutes(-1))
                 throw new ArgumentException("A data de início não pode ser anterior à data atual.");
         }
     }

@@ -29,7 +29,9 @@ namespace ModuloMVC.Services
 
         public async Task Create(string? titulo, string? descricao, DateTime? dataInicio, DateTime? dataFim, List<int> IdsContatos)
         {
+            
             var tarefa = new Tarefa(titulo, descricao, dataInicio, dataFim);
+            if(await _tarefasRepository.Exist(tarefa, null))throw new Exception("Essa tarefa já existe.");
             var contatos = await _contatoRepository.GetContatosByIds(IdsContatos);
             tarefa.AtualizarContatos(contatos);
             await _tarefasRepository.CreateTarefa(tarefa);
@@ -54,7 +56,7 @@ namespace ModuloMVC.Services
                 case "todas":
                     visaotarefa = visaotarefa.todas;
                     break;
-
+                
             }
             
             var tarefas = await _tarefasRepository.GetAllTarefas(titulo, dataInicio, dataFim, status, visaotarefa);
@@ -80,9 +82,11 @@ namespace ModuloMVC.Services
         {
             var tarefa = await _tarefasRepository.GetByIdTarefa(id);
             tarefa.AtualizarTarefa(titulo, descricao, dataInicio, dataFim, status);
+            if(await _tarefasRepository.Exist(tarefa, id))throw new Exception("Não é possivel fazer duas tarefas serem iguais");
             var contatos = await _contatoRepository.GetContatosByIds(IdsContatos);
             tarefa.AtualizarContatos(contatos);
             await _tarefasRepository.UpdateTarefa(tarefa);
         }
+
     }
 }

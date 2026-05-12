@@ -1,3 +1,4 @@
+@using ModuloMVC.Enum
 @model IEnumerable<ModuloMVC.ViewModels.TarefaViewModel>
 
 @{
@@ -10,35 +11,35 @@
 
 
 
-    <header class="d-flex flex-column justify-content-center align-items-center text-center mb-5">
-        <h1 class="display-6 py-3 fw-bold">Serviço & Tarefas</h1>
-<div class="d-flex justify-content-between align-items-end mb-4">
-    <div class="quick-tabs d-flex gap-2 p-1 bg-light rounded-pill border">
-        <a asp-action="Index" asp-route-visao="atrasadas" 
-           class="quick-tab text-decoration-none  @(ViewBag.VisaoAtual == "atrasadas" ? "active" : "text-muted")">
-           Atrasadas
-        </a>
-        <a asp-action="Index" asp-route-visao="hoje" 
-           class="quick-tab text-decoration-none @(ViewBag.VisaoAtual == "hoje" ? "active" : "text-muted")">
-           Hoje em diante
-        </a>
-        <a asp-action="Index" asp-route-visao="todas" 
-           class="quick-tab text-decoration-none  @(ViewBag.VisaoAtual == "todas" ? "active" : "text-muted")">
-           Todas
-        </a>
+<header class="d-flex flex-column justify-content-center align-items-center text-center mb-5">
+    <h1 class="display-6 py-3 fw-bold">Serviço & Tarefas</h1>
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="quick-tabs d-flex gap-2 p-1 bg-light rounded-pill border">
+            <a asp-action="Index" asp-route-visao="atrasadas"
+                   class="quick-tab text-decoration-none  @(ViewBag.VisaoAtual == "atrasadas" ? "active" : "text-muted")">
+                Atrasadas
+            </a>
+            <a asp-action="Index" asp-route-visao="hoje"
+                   class="quick-tab text-decoration-none @(ViewBag.VisaoAtual == "hoje" ? "active" : "text-muted")">
+                Hoje em diante
+            </a>
+            <a asp-action="Index" asp-route-visao="todas"
+                   class="quick-tab text-decoration-none  @(ViewBag.VisaoAtual == "todas" ? "active" : "text-muted")">
+                Todas
+            </a>
+        </div>
     </div>
-</div>
 
  
-    </header>
+</header>
 <div class="container-fluid d-flex justify-content-between">
 
 
-            <a asp-action="Criar" class="btn-create-contact">
-               <div class="add-icon-wrapper">
-                    <i class="bi bi-plus-lg"></i>
-                </div> <span class="btn-text">Nova Tarefa</span> 
-            </a>
+    <a asp-action="Criar" class="btn-create-contact">
+        <div class="add-icon-wrapper">
+            <i class="bi bi-plus-lg"></i>
+        </div> <span class="btn-text">Nova Tarefa</span>
+    </a>
 
 
 
@@ -47,191 +48,211 @@
 
 
 <div class="dropdown d-inline-block filter-wrapper">
-    <button class="btn btn-filter dropdown-toggle position-relative" type="button" id="dropdownFiltro" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+    <button class="btn btn-filter dropdown-toggle position-relative" type="button" id="dropdownFiltro"
+            data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
         <i class="bi bi-funnel me-1"></i> Filtrar
-        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-primary border border-light rounded-circle filter-badge d-none" id="badgeFiltroAtivo"></span>
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-primary border border-light rounded-circle filter-badge d-none"
+              id="badgeFiltroAtivo"></span>
     </button>
 
-    <div class="dropdown-menu filter-menu shadow-lg border-0 p-4" aria-labelledby="dropdownFiltro" style="width: 300px;">
+    <div class="dropdown-menu filter-menu shadow-lg border-0 p-4" aria-labelledby="dropdownFiltro"
+         style="width: 320px;">
         <h6 class="dropdown-header px-0 text-dark fw-bold mb-3 fs-6">Refinar Busca</h6>
 
         <div class="filter-section mb-3">
             <label for="filtroTitulo" class="home-form-label fs-7 fw-medium text-muted">Título</label>
-            <input type="text" id="filtroTitulo" class="form-control form-control-sm custom-input-filter" placeholder="Buscar por nome...">
+            <input type="text" id="filtroTitulo" class="form-control form-control-sm custom-input-filter"
+                   placeholder="O que você procura?">
         </div>
 
-        <div class="filter-section mb-3">
-            <label for="filtroData" class="home-form-label fs-7 fw-medium text-muted">Vencimento / Cadastro</label>
-            <input type="date" id="filtroData" class="form-control form-control-sm custom-input-filter">
-        </div>
-
-        <div class="filter-section mb-10">
-            <label class="home-form-label fs-7 fw-medium text-muted">Status</label>
-            <div class="d-flex flex-wrap gap-2">
-            <div class="form-check custom-filter-check">
-                    <input class="form-check-input status-checkbox" type="checkbox" value="1" id="statusPendente">
-                    <label class="form-check-label text-muted fs-7" for="statusPendente">Pendente</label>
-                </div>
-                <div class="form-check custom-filter-check">
-                    <input class="form-check-input status-checkbox" type="checkbox" value="2" id="statusExecutando">
-                    <label class="form-check-label text-muted fs-7" for="statusExecutando">Executando</label>
-                </div>
-                <div class="form-check custom-filter-check">
-                    <input class="form-check-input status-checkbox" type="checkbox" value="3" id="statusConcluido">
-                    <label class="form-check-label text-muted fs-7" for="statusConcluido">Concluído</label>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label for="filtroDataInicio" class="home-form-label fs-7 fw-medium text-muted">Início</label>
+                <input type="datetime-local" id="filtroDataInicio" class="form-control form-control-sm custom-input-filter">
             </div>
-         
+            <div class="col-6">
+                <label for="filtroDataFim" class="home-form-label fs-7 fw-medium text-muted">Término</label>
+                <input type="datetime-local" id="filtroDataFim" class="form-control form-control-sm custom-input-filter">
+            </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 fs-7" id="btnLimparFiltro">Limpar tudo</button>
-            <button type="button" class="btn btn-dark btn-sm px-4 rounded-pill" id="btnAplicarFiltro">Aplicar</button>
+        <div class="filter-section mb-4">
+            <label class="home-form-label fs-7 fw-medium text-muted mb-2 d-block">Status</label>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach (var status in Enum.GetValues(typeof(StatusTarefa)))
+                {
+                    <div class="form-check custom-filter-check">
+                        <input class="form-check-input status-checkbox" type="checkbox" 
+                               value="@((int)status)" id="status_@status">
+                        <label class="form-check-label fs-7" for="status_@status">@status</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+            <button type="button" class="btn btn-link text-muted text-decoration-none p-0 fs-7"
+                    id="btnLimparFiltro">Limpar tudo</button>
+            <button type="button" class="btn btn-dark btn-sm px-4 rounded-pill"
+                    id="btnAplicarFiltro">Aplicar</button>
         </div>
     </div>
 </div>
 </div>
-</div>
 
-    <div class="tasks-horizontal-scroll">
-        <div class="tasks-track">
+<div class="tasks-horizontal-scroll">
+    <div class="tasks-track">
             
-            @{ int index = 1; }
-            @foreach (var task in Model)
-            {
-                <a class="task-card shadow-sm"  asp-action="Editar" asp-route-id="@task.Id" >
-                    <div class="task-number">@index.ToString("D2")</div>
+        @{
+            int index = 1;
+        }
+        @foreach (var task in Model)
+        {
+            <a class="task-card shadow-sm" asp-action="Editar" asp-route-id="@task.Id">
+                <div class="task-number">@index.ToString("D2")</div>
                     
-                    <div class="task-content">
-                        <div class="card-edit-icon">
-            <i class="bi bi-pencil-fill"></i>
-        </div>
-                        @if (!string.IsNullOrWhiteSpace(task.Titulo))
-                        {
-                            <h2 class="task-title text-break">@task.Titulo</h2>
-                        }
-                        else
-                        {
-                            <h2 class="task-title text-placeholder fst-italic">Tarefa sem título</h2>
-                        }
+                <div class="task-content">
+                    <div class="card-edit-icon">
+                        <i class="bi bi-pencil-fill"></i>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(task.Titulo))
+                    {
+                        <h2 class="task-title text-break">@task.Titulo</h2>
+                    }
+                    else
+                    {
+                        <h2 class="task-title text-placeholder fst-italic">Tarefa sem título</h2>
+                    }
                         
-                        @if (!string.IsNullOrWhiteSpace(task.Descricao))
-                        {
-                            <p class="task-description">@task.Descricao</p>
-                        }
-                        else
-                        {
-                            <p class="task-description text-placeholder fst-italic">
-                                <i class="bi bi-info-circle me-1"></i>Nenhum detalhe adicional fornecido para esta tarefa.
-                            </p>
-                        }
+                    @if (!string.IsNullOrWhiteSpace(task.Descricao))
+                    {
+                        <p class="task-description">@task.Descricao</p>
+                    }
+                    else
+                    {
+                        <p class="task-description text-placeholder fst-italic">
+                            <i class="bi bi-info-circle me-1"></i>Nenhum detalhe adicional fornecido para esta tarefa.
+                        </p>
+                    }
 
-                        <div class="task-metadata mt-auto pt-3">
-                            <div class="meta-item">
-                                <i class="bi bi-calendar me-2"></i>
-                                @if (task.DataInicio.HasValue)
-                                {
-                                    <span class="fw-medium">@task.DataInicio.Value.ToString("dd/MM/yyyy HH:mm")</span>
-                                }
-                                else
-                                {
-                                    <span class="text-placeholder opacity-50">Sem data de inicio definida</span>
-                                }
-                            </div>
-                            
-                                <div class="meta-item">
-                                <i class="bi bi-calendar-check me-2"></i>
-                                @if (task.DataFim.HasValue)
-                                {
-                                    <span class="fw-medium">@task.DataFim.Value.ToString("dd/MM/yyyy HH:mm")</span>
-                                }
-                                else
-                                {
-                                    <span class="text-placeholder opacity-50">Sem vencimento definido</span>
-                                }
-                            </div>
-</div>
-                            <div class="meta-item mt-2">
-                                @if(task.Status.ToString() == "Pendente") {
-                                    <span class="badge-status pendente ">
-                                        <i class="bi bi-circle-fill me-2 tiny-dot"></i> Pendente
-                                    </span>
-                                }
-                                else if(task.Status.ToString() == "Executando") {
-                                    <span class="badge-status executando">
-                                        <i class="bi bi-circle-fill me-2 tiny-dot"></i> Executando
-                                    </span>
-                                }
-                                else if(task.Status.ToString() == "Concluida") {
-                                    <span class="badge-status success">
-                                        <i class="bi bi-circle-fill me-2 tiny-dot"></i> Concluído
-                                    </span>
-                                }
-                            </div>
-                        
-
-                        <div class="task-team mt-3 border-top pt-3">
-                            @if (task.ContatosEnvolvidos != null && task.ContatosEnvolvidos.Any())
+                    <div class="task-metadata mt-auto pt-3">
+                        <div class="meta-item">
+                            <i class="bi bi-calendar me-2"></i>
+                            @if (task.DataInicio.HasValue)
                             {
-                                <div class="avatar-stack">
-                                    @foreach(var contato in task.ContatosEnvolvidos.Take(3)) {
-                                        <div class="avatar-mini" title="@contato.Nome">@contato.Nome.Substring(0,1).ToUpper()</div>
-                                    }
-                                    @if(task.ContatosEnvolvidos.Count() > 3) {
-                                        <div class="avatar-mini more">+@(task.ContatosEnvolvidos.Count() - 3)</div>
-                                    }
-                                    <span class="ms-2 small text-muted">@task.ContatosEnvolvidos.Count() com a tarefa</span>
-                                </div>
+                                <span class="fw-medium">@task.DataInicio.Value.ToString("dd/MM/yyyy HH:mm")</span>
                             }
                             else
                             {
-                                <span class="text-placeholder small opacity-50">
-                                    <i class="bi bi-person-dash me-1"></i>Sem contatos atribuídos
-                                </span>
+                                <span class="text-placeholder opacity-50">Sem data de inicio definida</span>
+                            }
+                        </div>
+                            
+                        <div class="meta-item">
+                            <i class="bi bi-calendar-check me-2"></i>
+                            @if (task.DataFim.HasValue)
+                            {
+                                <span class="fw-medium">@task.DataFim.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                            }
+                            else
+                            {
+                                <span class="text-placeholder opacity-50">Sem vencimento definido</span>
                             }
                         </div>
                     </div>
+                    <div class="meta-item mt-2">
+                        @if (task.Status.ToString() == "Pendente")
+                        {
+                            <span class="badge-status pendente ">
+                                <i class="bi bi-circle-fill me-2 tiny-dot"></i> Pendente
+                            </span>
+                        }
+                        else if (task.Status.ToString() == "Executando")
+                        {
+                            <span class="badge-status executando">
+                                <i class="bi bi-circle-fill me-2 tiny-dot"></i> Executando
+                            </span>
+                        }
+                        else if (task.Status.ToString() == "Concluida")
+                        {
+                            <span class="badge-status success">
+                                <i class="bi bi-circle-fill me-2 tiny-dot"></i> Concluído
+                            </span>
+                        }
+                    </div>
 
-
-                </a>
-                index++;
-            }
-
-            <a asp-action="Criar" class="add-task-card">
-                <div class="add-icon-wrapper">
-                    <i class="bi bi-plus-lg"></i>
+                        
+                    <div class="task-team mt-3 border-top pt-3">
+                        @if (task.ContatosEnvolvidos != null && task.ContatosEnvolvidos.Any())
+                        {
+                            <div class="avatar-stack">
+                                @foreach (var contato in task.ContatosEnvolvidos.Take(3))
+                                {
+                                    <div class="avatar-mini" title="@contato.Nome">@contato.Nome.Substring(0, 1).ToUpper()</div>
+                                }
+                                @if (task.ContatosEnvolvidos.Count() > 3)
+                                {
+                                    <div class="avatar-mini more">+@(task.ContatosEnvolvidos.Count() - 3)</div>
+                                }
+                                <span class="ms-2 small text-muted">@task.ContatosEnvolvidos.Count() com a tarefa</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-placeholder small opacity-50">
+                                <i class="bi bi-person-dash me-1"></i>Sem contatos atribuídos
+                            </span>
+                        }
+                    </div>
                 </div>
-                <span class="fw-bold mt-2">Criar Tarefa</span>
+
+
             </a>
-        </div>
+            index++;
+        }
+
+        <a asp-action="Criar" class="add-task-card">
+            <div class="add-icon-wrapper">
+                <i class="bi bi-plus-lg"></i>
+            </div>
+            <span class="fw-bold mt-2">Criar Tarefa</span>
+        </a>
     </div>
+</div>
 
  
 
+@if(TempData["MensagemTarefa"] != null){
 
-@if (TempData["ExcluirTarefa"]?.ToString() == "1")
-{
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
-        <div id="toastNotificacao" class="toast align-items-center text-white bg-dark border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+        <div id="toastNotificacao" class="toast align-items-center border-0 shadow-lg" style="background-color: #e8f5e9; color: #2e7d32;"
+             role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
             <div class="d-flex">
                 <div class="toast-body fw-medium">
-                    <i class="bi bi-check-circle-fill text-success me-2"></i> Tarefa apagada com sucesso!
+                    <i class="bi bi-check-circle-fill text-success me-2"></i> 
+                    @TempData["MensagemTarefa"]
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+                <button type="button" class="btn-close  me-2 m-auto" 
+                        data-bs-dismiss="toast" aria-label="Fechar"></button>
             </div>
         </div>
     </div>
+
 }
 
 
+
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
-        const filtrosAtuais = window.location.search;
-        
-        sessionStorage.setItem('CaminhoTarefa', filtrosAtuais);
-});
 
-document.addEventListener("DOMContentLoaded", function () {
+    const toastElement = document.getElementById('toastNotificacao');
+    if (toastElement) {
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    }
+
+    const filtrosAtuais = window.location.search;
+    sessionStorage.setItem('CaminhoTarefa', filtrosAtuais);
 
     const container = document.querySelector('.tasks-horizontal-scroll');
     if (container) {
@@ -243,108 +264,64 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const btnLimpar = document.getElementById('btnLimparFiltro');
     const btnAplicar = document.getElementById('btnAplicarFiltro');
+    const btnLimpar = document.getElementById('btnLimparFiltro');
     const badge = document.getElementById('badgeFiltroAtivo');
-    
     const inputTitulo = document.getElementById('filtroTitulo');
-    const inputData = document.getElementById('filtroData');
+    const inputDataInicio = document.getElementById('filtroDataInicio');
+    const inputDataFim = document.getElementById('filtroDataFim');
     const checkboxesStatus = document.querySelectorAll('.status-checkbox');
 
     if (btnAplicar) {
         btnAplicar.addEventListener('click', function () {
-            const titulo = inputTitulo.value.trim();
-            const data = inputData.value;
-            
             const params = new URLSearchParams();
-            
-const urlAtual = new URLSearchParams(window.location.search);
-    if (urlAtual.has('visao')) {
-        params.append('visao', urlAtual.get('visao'));
-    }
+            const urlAtual = new URLSearchParams(window.location.search);
 
-            if (titulo) params.append('titulo', titulo);
-            if (data) params.append('data', data);
-            
+            if (urlAtual.has('visao')) {
+                params.append('visao', urlAtual.get('visao'));
+            }
+
+            if (inputTitulo.value.trim()) {
+                params.append('titulo', inputTitulo.value.trim());
+            }
+
+            if (inputDataInicio.value) params.append('dataInicio', inputDataInicio.value);
+            if (inputDataFim.value) params.append('dataFim', inputDataFim.value);
+
             checkboxesStatus.forEach(chk => {
-                if (chk.checked) {
-                    params.append('status', chk.value); 
-                }
+                if (chk.checked) params.append('status', chk.value);
             });
 
-            const urlBase = window.location.pathname;
-            window.location.href = urlBase + '?' + params.toString();
+            window.location.href = window.location.pathname + '?' + params.toString();
         });
     }
 
-if (btnLimpar) {
-    btnLimpar.addEventListener('click', function () {
-        const urlAtual = new URLSearchParams(window.location.search);
-        let novaUrl = window.location.pathname;
+    if (btnLimpar) {
+        btnLimpar.addEventListener('click', function () {
+            const urlAtual = new URLSearchParams(window.location.search);
+            let urlDestino = window.location.pathname;
+            if (urlAtual.has('visao')) {
+                urlDestino += '?visao=' + urlAtual.get('visao');
+            }
+            window.location.href = urlDestino;
+        });
+    }
 
-        if (urlAtual.has('visao')) {
-            novaUrl += '?visao=' + urlAtual.get('visao');
-        }
-
-        window.location.href = novaUrl; 
-    });
-}
     const urlParams = new URLSearchParams(window.location.search);
     let temFiltroAtivo = false;
 
-    if (urlParams.has('titulo')) {
-        inputTitulo.value = urlParams.get('titulo');
-        temFiltroAtivo = true;
-    }
-    
-    if (urlParams.has('data')) {
-        inputData.value = urlParams.get('data');
-        temFiltroAtivo = true;
-    }
+    if (urlParams.has('titulo')) { inputTitulo.value = urlParams.get('titulo'); temFiltroAtivo = true; }
+    if (urlParams.has('dataInicio')) { inputDataInicio.value = urlParams.get('dataInicio'); temFiltroAtivo = true; }
+    if (urlParams.has('dataFim')) { inputDataFim.value = urlParams.get('dataFim'); temFiltroAtivo = true; }
     
     if (urlParams.has('status')) {
-        const statusNaUrl = urlParams.getAll('status'); 
-        
+        const statusNaUrl = urlParams.getAll('status');
         checkboxesStatus.forEach(chk => {
-            if (statusNaUrl.includes(chk.value)) {
-                chk.checked = true;
-            }
+            if (statusNaUrl.includes(chk.value)) chk.checked = true;
         });
         temFiltroAtivo = true;
     }
 
-    if (temFiltroAtivo && badge) {
-        badge.classList.remove('d-none');
-    }
-
-}); 
-
-btnAplicar.addEventListener('click', function () {
-    const params = new URLSearchParams(window.location.search);
-    
-    params.set('titulo', inputTitulo.value.trim());
- 
-  
-
-    window.location.href = window.location.pathname + '?' + params.toString();
+    if (temFiltroAtivo && badge) badge.classList.remove('d-none');
 });
-
-
-document.querySelectorAll('input[type="date"]').forEach(function(dateInput) {
-    dateInput.addEventListener('click', function(e) {
-        if (typeof this.showPicker === 'function') {
-            this.showPicker();
-        }
-    });
-});
-
-document.querySelectorAll('.home-input-group-text').forEach(function(iconWrapper) {
-    iconWrapper.addEventListener('click', function() {
-        const input = this.nextElementSibling;
-        if (input && input.type === 'date' && typeof input.showPicker === 'function') {
-            input.showPicker();
-        }
-    });
-});
-  
 </script>
