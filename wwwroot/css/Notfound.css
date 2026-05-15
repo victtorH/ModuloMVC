@@ -1,0 +1,103 @@
+:root {
+    --card-bg: #ffffff;
+    --card-dark: #1e293b;
+    --accent-color: #7fa1c3;
+    --accent-color-hover: #6482a3;
+    --text-muted: #64748b;
+    --gradient-light: linear-gradient(135deg, #f8f9fa 0%, #eef2f6 100%);
+    --gradient-dark: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    --lime-light: #cafae0; /* Verde claro mais suave, como na imagem */
+}
+
+body {
+    background: var(--gradient-light);
+    font-family: 'Inter', sans-serif;
+    color: var(--card-dark);
+}
+
+.z-index-1000 {
+    z-index: 1000;
+}
+
+/* Hero Section */
+.bg-text-404 {
+    font-size: 28rem; /* Aumentei para ficar ainda mais gigante e sutil */
+    z-index: -1;
+    color: #cbd5e1; /* Cor de fundo mais sutil */
+    line-height: 1;
+}
+
+.btn-recovery {
+    background-color: var(--card-dark);
+    color: white;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-recovery:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Newsletter Card */
+.newsletter-card {
+    background: var(--gradient-dark);
+    position: relative;
+    overflow: hidden;
+}
+
+.input-group-custom {
+    display: flex;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-control-clean {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    width: 100%;
+    outline: none;
+}
+
+.form-control-clean::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-subscribe {
+    background-color: var(--lime-light); /* Lime light do print */
+    color: #064e3b;
+    border-radius: 100px;
+    padding: 10px 25px;
+    border: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-subscribe:hover {
+    background-color: #ffffff;
+    transform: scale(1.05);
+}
+
+.x-small { font-size: 0.75rem; }
+
+/* Animação do Badge de Filtro Ativo (Reaproveitado das tarefas) */
+.filter-badge {
+    animation: pulseBadge 2s infinite;
+}
+
+@keyframes pulseBadge {
+    0% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+    }
+}

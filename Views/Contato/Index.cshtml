@@ -4,8 +4,8 @@
     ViewData["Title"] = "Meus Contatos";
 }
 
-<link rel="stylesheet" href="~/css/Contato.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/ContatoResp.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Contato_css/Contato.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Contato_css/ContatoResp.css" asp-append-version="true" />
 
 
 <div class="container d-flex">
@@ -111,11 +111,11 @@
 
                                     <div class="contact-meta">
                                         @if(item.Email.Length < 25){
-                                        <span><i class="bi bi-envelope"></i> @item.Email</span>
+                                        <span class="text-muted"><i class="bi bi-envelope text-muted"></i> @item.Email</span>
                                         }else{
-                                            <span><i class="bi bi-envelope"></i> @item.Email.Substring(0,25) ...</span>
+                                            <span class="text-muted" ><i class="bi bi-envelope text-muted "></i> @item.Email.Substring(0,25) ...</span>
                                         }
-                                        <span><i class="bi bi-telephone"></i>  @Convert.ToUInt64(item.Telefone).ToString(@"(00) 00000-0000")</span>
+                                        <span class="text-muted"><i class="bi bi-telephone text-muted"></i>  @Convert.ToUInt64(item.Telefone).ToString(@"(00) 00000-0000")</span>
                                     </div>
                                 </div>
                             </div>

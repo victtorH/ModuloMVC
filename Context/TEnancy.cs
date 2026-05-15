@@ -4,37 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ModuloMVC.Models;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using ModuloMVC.Interfaces;
 
 namespace ModuloMVC.Context
 {
-    public class TEnancyDB : IdentityDbContext<IdentityUser>
+    public class TEnancyDB : DbContext
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public TEnancyDB(
-            DbContextOptions<TEnancyDB> options,
-            IHttpContextAccessor httpContextAccessor) : base(options)
+        private readonly string UserIdLogado;
+        public TEnancyDB(DbContextOptions<TEnancyDB> options, IUserContext userContext)
+        : base(options)
         {
-            _httpContextAccessor = httpContextAccessor;
-        }
 
-        // 2. A MÁGICA: Uma propriedade dinâmica. 
-        // Toda vez que alguém chamar isso, ela faz a leitura AO VIVO do usuário atual.
-        public string UserIdLogado
-        {
-            get
-            {
-                var id = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-                return id ?? string.Empty;
-            }
+            UserIdLogado = userContext.UserId;
+
         }
 
         public DbSet<Tarefa> Tarefa { get; set; }
         public DbSet<Contato> Contato { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,23 +37,66 @@ namespace ModuloMVC.Context
                 .SelectMany(t => t.GetForeignKeys())
                 .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
 
-        foreach (var fk in cascadeFKs)
-{
-    // Verificamos se a entidade é uma tabela de "ligação" (Many-to-Many)
-    // Geralmente o EF as nomeia combinando os nomes ou usando dicionários
-    if (fk.DeclaringEntityType.IsPropertyBag || fk.DeclaringEntityType.Name.Contains("TarefaContato"))
-    {
-        // Para tabelas de ligação, MANTEMOS o Cascade
-        fk.DeleteBehavior = DeleteBehavior.Cascade;
-    }
-    else
-    {
-        // Para o restante das tabelas (como Usuario -> Tarefa), mantemos o Restrict
-        fk.DeleteBehavior = DeleteBehavior.Restrict;
-    }
-}
+            foreach (var fk in cascadeFKs)
+            {
+                // Verificamos se a entidade é uma tabela de "ligação" (Many-to-Many)
+                // Geralmente o EF as nomeia combinando os nomes ou usando dicionários
+                if (fk.DeclaringEntityType.IsPropertyBag || fk.DeclaringEntityType.Name.Contains("TarefaContato"))
+                {
+                    // Para tabelas de ligação, MANTEMOS o Cascade
+                    fk.DeleteBehavior = DeleteBehavior.Cascade;
+                }
+                else
+                {
+                    // Para o restante das tabelas (como Usuario -> Tarefa), mantemos o Restrict
+                    fk.DeleteBehavior = DeleteBehavior.Restrict;
+                }
+            }
 
-            // --- CONFIGURAÇÃO DA TAREFA DIRETO NO DBCONTEXT ---
+modelBuilder.Entity<Usuario>(entity =>
+    {
+        entity.ToTable("AspNetUsers", t => t.ExcludeFromMigrations());
+
+        entity.HasKey(u => u.UserId);
+
+        entity.Property(u => u.UserId)
+              .HasColumnName("Id"); 
+
+        entity.Property(u => u.NomeUsuario).HasColumnName("NomeUsuario");
+        entity.Property(u => u.Email).HasColumnName("Email");
+        entity.Property(u => u.Bio).HasColumnName("Bio");
+        entity.Property(u => u.DataCriacao).HasColumnName("DataCriacao");
+        entity.Property(u => u.DataAtualizacao).HasColumnName("DataAtualizacao");
+        entity.Property(u => u.Avatar).HasColumnName("Avatar");
+        entity.Property(u => u.ConexaoGoogleAtiva).HasColumnName("ConexaoGoogleAtiva");
+
+        entity.HasQueryFilter(u => u.UserId == UserIdLogado);
+    });
+
+    modelBuilder.Entity<Contato>(entity =>
+    {
+        entity.HasKey(c => c.Id);
+
+        entity.HasOne<Usuario>() 
+              .WithMany()
+              .HasForeignKey(c => c.UserId)
+              .HasPrincipalKey(u => u.UserId) 
+              .OnDelete(DeleteBehavior.Restrict); 
+              
+    });
+
+    modelBuilder.Entity<Tarefa>(entity =>
+    {
+        entity.HasKey(t => t.Id);
+        entity.HasOne<Usuario>()
+              .WithMany()
+              .HasForeignKey(t => t.UserId)
+              .HasPrincipalKey(u => u.UserId)
+              .OnDelete(DeleteBehavior.Restrict);
+    });
+
+    modelBuilder.Ignore<Microsoft.AspNetCore.Identity.IdentityUser>();
+
 
             var tarefaBuilder = modelBuilder.Entity<Tarefa>();
 
@@ -100,16 +132,21 @@ namespace ModuloMVC.Context
                 var propUserId = entrada.Entity.GetType().GetProperty("UserId");
                 if (propUserId != null)
                 {
-                    // 4. Lemos o ID ao vivo na hora H de salvar
-                    var idAoVivo = UserIdLogado;
+                    // Pegamos o valor que JÁ ESTÁ na entidade (se o service preencheu)
+                    var idJaPreenchido = propUserId.GetValue(entrada.Entity) as string;
+                    var idLogadoContexto = UserIdLogado; // O que vem do Cookie/Contexto
 
-                    if (string.IsNullOrEmpty(idAoVivo))
+                    // Se não tem no contexto E não foi preenchido manualmente, aí sim damos o alerta
+                    if (string.IsNullOrEmpty(idLogadoContexto) && string.IsNullOrEmpty(idJaPreenchido))
                     {
                         throw new Exception("ALERTA: Tentativa de salvar dados sem um usuário logado validado pelo sistema.");
                     }
 
-                    // Carimbamos a tarefa com o ID correto!
-                    propUserId.SetValue(entrada.Entity, idAoVivo);
+                    // Se o Service não preencheu nada, mas temos um usuário logado, nós "carimbamos"
+                    if (string.IsNullOrEmpty(idJaPreenchido))
+                    {
+                        propUserId.SetValue(entrada.Entity, idLogadoContexto);
+                    }
                 }
             }
 

@@ -1,0 +1,46 @@
+@model ModuloMVC.ViewModels.ErrorViewModel
+@{
+    Layout = null; // Desabilita o layout para não tentar acessar o Identity/Banco
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Erro no T&Nancy</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body class="p-5">
+
+<link rel="stylesheet" href="~/css/Notfound.css" asp-append-version="true" />
+
+
+    <div class="container min-vh-100 d-flex flex-column justify-content-between py-5 overflow-hidden">
+        
+        <section class="row justify-content-center align-items-center flex-grow-1 text-center position-relative h-100">
+            <div class="col-12 z-index-1000">
+                <div class="content-wrapper position-relative text-center">
+                    <h2 class="display-3 fw-bold text-dark mb-3">Server Error</h2>
+                    <p class="text-muted mb-5 mx-auto" style="max-width: 450px;">
+                        Fiquem tranquilos, chamei o técnico: ele disse que o servidor só precisava de um tempo sozinho.🫡
+                    </p>
+                    <a href="/" class="btn btn-recovery px-5 py-3 rounded-pill fw-semibold">
+                        Go to Home <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <h1 class="display-0 fw-bold position-absolute start-50 top-50 translate-middle text-uppercase opacity-5 bg-text-404">500</h1>
+        </section>
+
+        
+    </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script src="~/js/Notfound.js" asp-append-version="true"></script>
+}
+</body>
+</html>

@@ -26,6 +26,7 @@ namespace ModuloMVC.Services
         public async Task Create(string nome, string email, string telefone, string? descricao)
         {
            var contato = new Contato(nome, email, telefone, descricao);
+           if(await _contatoRepository.Exist(contato,null)) throw new Exception("Esse contato já existe");
            await _contatoRepository.CreateContato(contato);
         }
 
@@ -56,9 +57,11 @@ namespace ModuloMVC.Services
         }
 
         public async Task Update(int id, string nome, string email, string telefone, bool status, string? descricao)
-        {
+        {   
+            
             var contato = await _contatoRepository.GetByIdContato(id);
             contato.AtualizarDados(nome, email, telefone, status, descricao);
+            if(await _contatoRepository.Exist(contato,id)) throw new Exception("Esse contato já existe");
             await _contatoRepository.UpdateContato(contato);
         }
     }

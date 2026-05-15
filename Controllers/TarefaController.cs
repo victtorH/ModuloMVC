@@ -12,7 +12,7 @@ using ModuloMVC.Interfaces;
 
 namespace ModuloMVC.Controllers
 {
-    [Authorize]
+
     public class TarefaController : Controller
     {
         private readonly ITarefaService _service;

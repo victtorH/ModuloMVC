@@ -1,11 +1,21 @@
 :root {
+
     --card-bg: #ffffff;
-    --card-dark: #1e293b;
-    --accent-color: #7fa1c3;
+
+    --card-dark: #1e293b; 
+
+    --accent-color: #7fa1c3; 
+
     --accent-color-hover: #6482a3;
-    --text-muted: #64748b;
+
+    --text-placeholder: #adb5bd;
+
     --gradient-light: linear-gradient(135deg, #f8f9fa 0%, #eef2f6 100%);
+
     --gradient-dark: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+
+    --gradient-accent: linear-gradient(135deg, #7fa1c3 0%, #6482a3 100%);
+
 }
 
 body {

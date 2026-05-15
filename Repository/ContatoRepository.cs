@@ -85,5 +85,10 @@ public async Task<List<Contato>> GetAllContatos(string? nome, string? email, str
             _context.Contato.Update(contato);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> Exist(Contato contato, int? idcontato)
+        {
+         return await _context.Contato.AnyAsync(c => c.Nome == contato.Nome && c.Email == contato.Email && c.Telefone == contato.Telefone && c.Id != idcontato);
+        }
     }
 }

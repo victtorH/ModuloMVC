@@ -1,0 +1,59 @@
+@{
+    ViewData["Title"] = "Not Found";
+}
+
+<link rel="stylesheet" href="~/css/Notfound.css" asp-append-version="true" />
+
+
+    <div class="container min-vh-100 d-flex flex-column justify-content-between py-5 overflow-hidden">
+        
+        <section class="row justify-content-center align-items-center flex-grow-1 text-center position-relative h-100">
+            <div class="col-12 z-index-1000">
+                <div class="content-wrapper position-relative text-center">
+                    <h2 class="display-3 fw-bold text-dark mb-3">Page not found</h2>
+                    <p class="text-muted mb-5 mx-auto" style="max-width: 450px;">
+                        Ops! Parece que você se perdeu no caminho. A página que você procura não existe ou foi movida.
+                    </p>
+                    <a href="/" class="btn btn-recovery px-5 py-3 rounded-pill fw-semibold">
+                        Go to Home <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <h1 class="display-0 fw-bold position-absolute start-50 top-50 translate-middle text-uppercase opacity-5 bg-text-404">404</h1>
+        </section>
+
+        <section class="row justify-content-center pb-4">
+            <div class="col-lg-10">
+                <div class="newsletter-card p-4 p-md-5 rounded-5 shadow-lg border-0 js-newsletter-animate">
+                    <div class="row align-items-center">
+                        <div class="col-md-7 mb-4 mb-md-0">
+                            <h3 class="h2 fw-bold text-white mb-3">Subscribe our newsletter</h3>
+                            <p class="text-light opacity-75 mb-0">
+                                Receba insights e atualizações diretamente no seu e-mail. Junte-se à nossa comunidade.
+                            </p>
+                        </div>
+                        <div class="col-md-5">
+                            <form class="newsletter-form position-relative">
+                                <label class="text-white small fw-light mb-2 d-block">Stay up to date</label>
+                                <div class="input-group-custom">
+                                    <input type="email" class="form-control-clean" placeholder="Enter your email" required>
+                                    <button type="submit" class="btn btn-subscribe">Subscribe</button>
+                                </div>
+                                <p class="mt-2 x-small text-white opacity-50">Ao se inscrever, você aceita nossa Política de Privacidade.</p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script src="~/js/Notfound.js" asp-append-version="true"></script>
+}

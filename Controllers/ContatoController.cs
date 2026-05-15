@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ModuloMVC.Controllers
 {
-    [Authorize]
+
     public class ContatoController : Controller
     {
 

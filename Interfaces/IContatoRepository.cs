@@ -15,6 +15,7 @@ namespace ModuloMVC.Interfaces
         Task UpdateContato(Contato contato);
         Task DeleteContato(int id);
         Task<List<Tarefa>> GetTarefasEnvolvidas(int contatoId);
+        Task<bool> Exist(Contato contato, int? idcontato);
 
     }
 }
